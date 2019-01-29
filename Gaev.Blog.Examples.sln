@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.SqlQueryLogger", "Gaev.Blog.Examples.SqlQueryLogger\Gaev.Blog.Examples.SqlQueryLogger.csproj", "{BD005016-C65B-4BDF-A87A-E275D45214CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.WebhookTests", "Gaev.Blog.Examples.WebhookTests\Gaev.Blog.Examples.WebhookTests.csproj", "{21B703DF-D8A2-4A67-AC85-FFA25E6FAE44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.AsyncTaskThrottling", "Gaev.Blog.Examples.AsyncTaskThrottling\Gaev.Blog.Examples.AsyncTaskThrottling.csproj", "{6632D1AC-CA63-484E-BDA0-05F143EEB242}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD005016-C65B-4BDF-A87A-E275D45214CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD005016-C65B-4BDF-A87A-E275D45214CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD005016-C65B-4BDF-A87A-E275D45214CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD005016-C65B-4BDF-A87A-E275D45214CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B703DF-D8A2-4A67-AC85-FFA25E6FAE44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B703DF-D8A2-4A67-AC85-FFA25E6FAE44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B703DF-D8A2-4A67-AC85-FFA25E6FAE44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B703DF-D8A2-4A67-AC85-FFA25E6FAE44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6632D1AC-CA63-484E-BDA0-05F143EEB242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6632D1AC-CA63-484E-BDA0-05F143EEB242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6632D1AC-CA63-484E-BDA0-05F143EEB242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6632D1AC-CA63-484E-BDA0-05F143EEB242}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
