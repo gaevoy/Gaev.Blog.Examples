@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.WebhookT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.AsyncTaskThrottling", "Gaev.Blog.Examples.AsyncTaskThrottling\Gaev.Blog.Examples.AsyncTaskThrottling.csproj", "{6632D1AC-CA63-484E-BDA0-05F143EEB242}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.SelfDocumentedApp", "Gaev.Blog.Examples.SelfDocumentedApp\Gaev.Blog.Examples.SelfDocumentedApp.csproj", "{34A7B3AE-5110-4305-A6CF-815E9D98C017}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{6632D1AC-CA63-484E-BDA0-05F143EEB242}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6632D1AC-CA63-484E-BDA0-05F143EEB242}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6632D1AC-CA63-484E-BDA0-05F143EEB242}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34A7B3AE-5110-4305-A6CF-815E9D98C017}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34A7B3AE-5110-4305-A6CF-815E9D98C017}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34A7B3AE-5110-4305-A6CF-815E9D98C017}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34A7B3AE-5110-4305-A6CF-815E9D98C017}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
