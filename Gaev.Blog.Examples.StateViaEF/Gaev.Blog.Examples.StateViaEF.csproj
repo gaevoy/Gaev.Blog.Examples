@@ -65,6 +65,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LegacyUser.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="UserStateTests.cs" />
   </ItemGroup>
   <ItemGroup>
