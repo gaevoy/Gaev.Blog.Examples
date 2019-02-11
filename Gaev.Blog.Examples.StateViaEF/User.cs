@@ -21,38 +21,6 @@ namespace Gaev.Blog.Examples
         public DateTimeOffset? BlockedUntil { get; set; }
     }
 
-    public abstract class UserState
-    {
-        protected User User { get; private set; }
-        public virtual void Login(string password) => throw new InvalidOperationException();
-        public virtual void InputCaptcha(string captcha) => throw new InvalidOperationException();
-        public virtual void Logout() => throw new InvalidOperationException();
-        public virtual bool HasAccess => false;
-
-        protected virtual void OnStart()
-        {
-        }
-
-        protected void Become(UserState next)
-        {
-            next.User = User;
-            next.OnStart();
-            User.StateType = next.GetType().Name;
-            User.State = next;
-        }
-
-        public static UserState New(string type, User user)
-        {
-            switch (type)
-            {
-                case nameof(UserIsAuthorized): return new UserIsAuthorized {User = user};
-                case nameof(UserInputsCaptcha): return new UserInputsCaptcha {User = user};
-                case nameof(UserIsBlocked): return new UserIsBlocked {User = user};
-                default: return new UserAttemptsToLogin {User = user};
-            }
-        }
-    }
-
     public class UserAttemptsToLogin : UserState
     {
         protected override void OnStart()
@@ -105,6 +73,38 @@ namespace Gaev.Blog.Examples
         protected override void OnStart()
         {
             User.BlockedUntil = DateTimeOffset.UtcNow.AddHours(1);
+        }
+    }
+
+    public abstract class UserState
+    {
+        protected User User { get; private set; }
+        public virtual void Login(string password) => throw new InvalidOperationException();
+        public virtual void InputCaptcha(string captcha) => throw new InvalidOperationException();
+        public virtual void Logout() => throw new InvalidOperationException();
+        public virtual bool HasAccess => false;
+
+        protected virtual void OnStart()
+        {
+        }
+
+        protected void Become(UserState next)
+        {
+            next.User = User;
+            next.OnStart();
+            User.StateType = next.GetType().Name;
+            User.State = next;
+        }
+
+        public static UserState New(string type, User user)
+        {
+            switch (type)
+            {
+                case nameof(UserIsAuthorized): return new UserIsAuthorized {User = user};
+                case nameof(UserInputsCaptcha): return new UserInputsCaptcha {User = user};
+                case nameof(UserIsBlocked): return new UserIsBlocked {User = user};
+                default: return new UserAttemptsToLogin {User = user};
+            }
         }
     }
 }

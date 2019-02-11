@@ -67,7 +67,7 @@
   <ItemGroup>
     <Compile Include="LegacyUser.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="UserStateTests.cs" />
+    <Compile Include="UserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

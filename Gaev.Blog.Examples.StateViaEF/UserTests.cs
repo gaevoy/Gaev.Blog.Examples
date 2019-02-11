@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Gaev.Blog.Examples
 {
-    public class UserStateTests
+    public class UserTests
     {
         private const string ConnectionString = "server=localhost;database=tempdb;UID=sa;PWD=sa123";
         private readonly Fixture _fixture = new Fixture();
