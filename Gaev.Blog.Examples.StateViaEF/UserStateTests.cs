@@ -14,7 +14,7 @@ namespace Gaev.Blog.Examples
         private readonly Fixture _fixture = new Fixture();
 
         [Test]
-        public void It_should_login_successfully()
+        public void It_should_login()
         {
             // Given
             var user = new User();
@@ -55,6 +55,21 @@ namespace Gaev.Blog.Examples
             // Then
             Assert.That(user.Captcha, Is.Null);
             Assert.That(user.State, Is.TypeOf<UserAttemptsToLogin>());
+        }
+
+        [Test]
+        public void It_should_be_blocked()
+        {
+            // Given
+            var user = new User().HavingState<UserInputsCaptcha>();
+
+            // When
+            user.State.InputCaptcha("wrong");
+
+            // Then
+            var now = DateTimeOffset.UtcNow;
+            Assert.That(user.BlockedUntil, Is.EqualTo(now.AddHours(1)).Within(100).Milliseconds);
+            Assert.That(user.State, Is.TypeOf<UserIsBlocked>());
         }
 
         [Test]
