@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using ExposedObject;
 using NSubstitute;
 using NUnit.Framework;
 using PlantUml.Net;
@@ -116,6 +117,14 @@ namespace Gaev.Blog.Examples
         }
 
         private static Uri RenderPngDiagram(IEnumerable<string> planUmlCode)
+        {
+            // https://github.com/KevReed/PlantUml.Net/issues/11
+            var code = string.Join("\n", planUmlCode);
+            var url = Exposed.From(new RendererFactory().CreateRenderer()).GetUrlComponent(code);
+            return new Uri("http://www.plantuml.com/plantuml/png/" + url);
+        }
+
+        private static Uri RenderPngDiagramAsFile(IEnumerable<string> planUmlCode)
         {
             var diagram = new RendererFactory()
                 .CreateRenderer()
