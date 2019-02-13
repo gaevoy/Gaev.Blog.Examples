@@ -19,6 +19,10 @@ namespace Gaev.Blog.Examples
         public int NumberOfAttempts { get; set; }
         public string Captcha { get; set; }
         public DateTimeOffset? BlockedUntil { get; set; }
+
+        public virtual void OnStateChanged(UserState prev, UserState next)
+        {
+        }
     }
 
     public class UserAttemptsToLogin : UserState
@@ -94,6 +98,7 @@ namespace Gaev.Blog.Examples
             next.OnStart();
             User.StateType = next.GetType().Name;
             User.State = next;
+            User.OnStateChanged(this, next);
         }
 
         public static UserState New(string type, User user)
