@@ -38,10 +38,6 @@
       <HintPath>..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ExposedObject, Version=1.3.0.0, Culture=neutral, PublicKeyToken=8a876670e4b7f0f5">
-      <HintPath>..\packages\ExposedObject.1.3.0\lib\net461\ExposedObject.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="mscorlib" />
     <Reference Include="NSubstitute, Version=4.0.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca">
@@ -52,8 +48,8 @@
       <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PlantUml.Net, Version=1.1.33.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\PlantUml.Net.1.1.33\lib\net461\PlantUml.Net.dll</HintPath>
+    <Reference Include="PlantUml.Net, Version=1.2.40.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\PlantUml.Net.1.2.40\lib\net461\PlantUml.Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10">

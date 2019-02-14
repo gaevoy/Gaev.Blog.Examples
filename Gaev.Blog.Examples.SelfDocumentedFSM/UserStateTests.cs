@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using ExposedObject;
 using NSubstitute;
 using NUnit.Framework;
 using PlantUml.Net;
@@ -113,25 +111,11 @@ namespace Gaev.Blog.Examples
             // Then
             var veryFirstState = planUmlCode[0].Substring(0, planUmlCode[0].IndexOf(" --> "));
             planUmlCode.Add($"[*] --> {veryFirstState}");
-            Console.WriteLine(RenderPngDiagram(planUmlCode.Distinct()));
-        }
-
-        private static Uri RenderPngDiagram(IEnumerable<string> planUmlCode)
-        {
-            // https://github.com/KevReed/PlantUml.Net/issues/11
-            var code = string.Join("\n", planUmlCode);
-            var url = Exposed.From(new RendererFactory().CreateRenderer()).GetUrlComponent(code);
-            return new Uri("http://www.plantuml.com/plantuml/png/" + url);
-        }
-
-        private static Uri RenderPngDiagramAsFile(IEnumerable<string> planUmlCode)
-        {
-            var diagram = new RendererFactory()
+            var code = string.Join("\n", planUmlCode.Distinct());
+            var diagramUrl = new RendererFactory()
                 .CreateRenderer()
-                .Render(string.Join("\n", planUmlCode), OutputFormat.Png);
-            var fileName = Path.GetTempFileName() + ".png";
-            File.WriteAllBytes(fileName, diagram);
-            return new Uri(fileName);
+                .RenderAsUri(code, OutputFormat.Png);
+            Console.WriteLine(diagramUrl);
         }
 
         public class TestUser : User
