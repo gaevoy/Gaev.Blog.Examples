@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <RootNamespace>Gaev.Blog.Examples</RootNamespace>
+        <LangVersion>7.2</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.38.0.1369" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
+      <PackageReference Include="Serilog.Sinks.TelegramClient" Version="2.0.1" />
+    </ItemGroup>
+
+</Project>
