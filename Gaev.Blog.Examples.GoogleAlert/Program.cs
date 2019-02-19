@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Apis.Customsearch.v1;
-using Google.Apis.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Core;
 using Serilog.Sinks.Telegram;
 
 namespace Gaev.Blog.Examples
@@ -20,58 +18,62 @@ namespace Gaev.Blog.Examples
                 .AddEnvironmentVariables()
                 .Build()
                 .Get<Config>();
-            using (var log = new LoggerConfiguration()
+            using (var logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.Telegram(config.TelegramApiKey, config.TelegramChatId)
                 .CreateLogger())
-            using (var db = new Db())
+                try
+                {
+                    await Sync(logger);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "");
+                }
+        }
+
+        static async Task Sync(Logger logger)
+        {
+            var otodom = new OtoDomCrawler();
+            using (var db = new AlertsDatabase())
             {
                 await db.Database.EnsureCreatedAsync();
 
-                var newPages = await Search(config, "\"gaevoy.github.io\"");
-                var oldPages = await db.Pages.ToListAsync();
-                var added = newPages.Except(oldPages).ToList();
-                var removed = oldPages.Except(newPages).ToList();
-
-                foreach (var item in added)
-                    log.Information($"Added [{item.Title}]({item.Link})");
-                foreach (var item in removed)
-                    log.Information($"Removed [{item.Title}]({item.Link})");
-
-                db.Pages.AddRange(added);
-                db.Pages.RemoveRange(removed);
+                var foundPages1 = otodom.Search(
+                    "https://www.otodom.pl/sprzedaz/mieszkanie/krakow/pradnik-czerwony/?search%5Bfilter_float_price%3Afrom%5D=300000&search%5Bfilter_float_price%3Ato%5D=600000&search%5Bfilter_enum_rooms_num%5D%5B0%5D=3&search%5Bfilter_enum_rooms_num%5D%5B1%5D=4&search%5Bfilter_enum_market%5D%5B0%5D=secondary&search%5Bdescription%5D=1&search%5Bdist%5D=0&search%5Bdistrict_id%5D=66&search%5Bsubregion_id%5D=410&search%5Bcity_id%5D=38&nrAdsPerPage=72");
+                var foundPages2 = otodom.Search(
+                    "https://www.otodom.pl/sprzedaz/mieszkanie/krakow/grzegorzki/?search%5Bfilter_float_price%3Afrom%5D=300000&search%5Bfilter_float_price%3Ato%5D=600000&search%5Bfilter_enum_rooms_num%5D%5B0%5D=3&search%5Bfilter_enum_rooms_num%5D%5B1%5D=4&search%5Bfilter_enum_market%5D%5B0%5D=secondary&search%5Bdescription%5D=1&search%5Bdist%5D=0&search%5Bdistrict_id%5D=58&search%5Bsubregion_id%5D=410&search%5Bcity_id%5D=38&nrAdsPerPage=72");
+                var knownPages = await db.Pages.ToListAsync();
+                var unknownPages = (await foundPages1)
+                    .Union(await foundPages2)
+                    .Except(knownPages)
+                    .ToList();
+                db.Pages.AddRange(unknownPages);
                 await db.SaveChangesAsync();
-            }
-        }
 
-        static async Task<List<Page>> Search(Config config, string query)
-        {
-            var googleApi = new CustomsearchService(new BaseClientService.Initializer {ApiKey = config.GoogleApiKey});
-            var request = googleApi.Cse.List(query);
-            request.Cx = config.GoogleSearchEngineId;
-            var response = await request.ExecuteAsync();
-            return response.Items.Select(e => new Page {Title = e.Title, Link = e.Link}).ToList();
+                if (knownPages.Any())
+                    foreach (var item in unknownPages)
+                        logger.Information($"[{item.Title}]({item.Link})");
+            }
         }
     }
 
     class Config
     {
-        // https://stackoverflow.com/a/44345657/1400547
-        public string GoogleApiKey { get; set; }
-        public string GoogleSearchEngineId { get; set; }
-
         // https://github.com/oxozle/serilog-sinks-telegram/issues/1
         public string TelegramApiKey { get; set; }
         public string TelegramChatId { get; set; }
     }
 
-    class Db : DbContext
+    class AlertsDatabase : DbContext
     {
         public DbSet<Page> Pages { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder opt) => opt.UseSqlite("Data Source=Alerts.db");
+
+        protected override void OnConfiguring(DbContextOptionsBuilder opt) =>
+            opt.UseSqlite("Data Source=Alerts.sqlite3");
     }
 
-    class Page
+    public class Page
     {
         [Key] public string Link { get; set; }
         public string Title { get; set; }
