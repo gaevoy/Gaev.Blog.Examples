@@ -1,0 +1,1 @@
+scp -r bin/Release/netcoreapp2.2/ubuntu.16.04-x64/publish/ root@165.227.244.117:/apps/Gaev.Blog.Examples.GoogleAlert/

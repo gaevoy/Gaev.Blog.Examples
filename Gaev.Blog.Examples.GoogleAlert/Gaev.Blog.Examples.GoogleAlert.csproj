@@ -10,8 +10,14 @@
     <ItemGroup>
       <PackageReference Include="HtmlAgilityPack" Version="1.9.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
       <PackageReference Include="Serilog.Sinks.TelegramClient" Version="2.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

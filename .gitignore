@@ -3,3 +3,4 @@
 **/obj/
 *.sln.DotSettings.user
 **/packages/
+/Gaev.Blog.Examples.GoogleAlert/Alerts.sqlite3
