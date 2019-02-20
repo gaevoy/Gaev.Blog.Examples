@@ -80,7 +80,7 @@ namespace Gaev.Blog.Examples
             while (url != null)
             {
                 var html = (await new HtmlWeb().LoadFromWebAsync(url)).DocumentNode;
-                offers.AddRange(GetOffers(html).Where(e => e.Link != null));
+                offers.AddRange(GetOffers(html));
                 url = html.SelectSingleNode("//a[@data-dir='next']")?.GetAttributeValue("href", null);
             }
 
@@ -89,9 +89,9 @@ namespace Gaev.Blog.Examples
 
         private static IEnumerable<Page> GetOffers(HtmlNode html)
         {
-            foreach (var offer in html.SelectNodes("//*[starts-with(@class, 'offer-item-details')]"))
+            foreach (var offer in html.SelectNodes("//*[@class='offer-item-details']"))
             {
-                var title = offer.SelectSingleNode(".//*[starts-with(@class, 'offer-item-title')]");
+                var title = offer.SelectSingleNode(".//*[@class='offer-item-title']");
                 var link = title?.AncestorsAndSelf("a").FirstOrDefault();
                 yield return new Page
                 {
