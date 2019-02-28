@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.StateVia
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.GoogleAlert", "Gaev.Blog.Examples.GoogleAlert\Gaev.Blog.Examples.GoogleAlert.csproj", "{837A3917-959F-49DC-BAD7-03BFA3F6F32D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.FunnyTestCases", "Gaev.Blog.Examples.FunnyTestCases\Gaev.Blog.Examples.FunnyTestCases.csproj", "{6368C84E-9009-47F9-964E-F9B3B12F64C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{837A3917-959F-49DC-BAD7-03BFA3F6F32D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{837A3917-959F-49DC-BAD7-03BFA3F6F32D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{837A3917-959F-49DC-BAD7-03BFA3F6F32D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6368C84E-9009-47F9-964E-F9B3B12F64C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6368C84E-9009-47F9-964E-F9B3B12F64C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6368C84E-9009-47F9-964E-F9B3B12F64C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6368C84E-9009-47F9-964E-F9B3B12F64C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
