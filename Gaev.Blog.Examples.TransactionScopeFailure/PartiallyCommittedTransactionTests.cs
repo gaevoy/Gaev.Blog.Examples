@@ -16,7 +16,6 @@ namespace Gaev.Blog.Examples
             using (var transaction = new TransactionScope())
             {
                 ExecuteSql("INSERT Logs VALUES(1)");
-                ExecuteSql("INSERT Logs VALUES(2)");
 
                 var iteration = 0;
                 RetryIfDeadlock(() =>
@@ -25,11 +24,10 @@ namespace Gaev.Blog.Examples
                     if (iteration == 1)
                         SimulateDeadlock();
                     else
-                        ExecuteSql("INSERT Logs VALUES(3)");
+                        ExecuteSql("INSERT Logs VALUES(2)");
                 });
 
-                ExecuteSql("INSERT Logs VALUES(4)");
-                ExecuteSql("INSERT Logs VALUES(5)");
+                ExecuteSql("INSERT Logs VALUES(3)");
 
                 transaction.Complete();
             }
@@ -41,7 +39,6 @@ namespace Gaev.Blog.Examples
             using (var transaction = new TransactionScope())
             {
                 ExecuteSql("INSERT Logs VALUES(1)");
-                ExecuteSql("INSERT Logs VALUES(2)");
                 try
                 {
                     SimulateDeadlock();
@@ -50,8 +47,8 @@ namespace Gaev.Blog.Examples
                 {
                 }
 
+                ExecuteSql("INSERT Logs VALUES(2)");
                 ExecuteSql("INSERT Logs VALUES(3)");
-                ExecuteSql("INSERT Logs VALUES(4)");
 
                 transaction.Complete();
             }
@@ -64,29 +61,47 @@ namespace Gaev.Blog.Examples
             using (var transaction = new TransactionScope())
             {
                 ExecuteSql("INSERT Logs VALUES(1)");
-                ExecuteSql("INSERT Logs VALUES(2)");
                 try
                 {
-                    ExecuteSql("INSERT Logs VALUES('three')");
+                    ExecuteSql("INSERT Logs VALUES('two')");
                 }
                 catch (SqlException)
                 {
                 }
 
                 ExecuteSql("INSERT Logs VALUES(3)");
-                ExecuteSql("INSERT Logs VALUES(4)");
 
                 transaction.Complete();
             }
         }
 
         [Test]
-        public void Fix()
+        public void Fix1()
+        {
+            var iteration = 0;
+            RetryIfDeadlock(() =>
+            {
+                iteration++;
+                using (var transaction = new TransactionScope())
+                {
+                    ExecuteSql("INSERT Logs VALUES(1)");
+                    if (iteration == 1)
+                        SimulateDeadlock();
+                    else
+                        ExecuteSql("INSERT Logs VALUES(2)");
+                    ExecuteSql("INSERT Logs VALUES(3)");
+
+                    transaction.Complete();
+                }
+            });
+        }
+
+        [Test]
+        public void Fix2()
         {
             using (var transaction = new TransactionScope())
             {
                 ExecuteSql("INSERT Logs VALUES(1)");
-                ExecuteSql("INSERT Logs VALUES(2)");
 
                 var iteration = 0;
                 using (new TransactionScope(TransactionScopeOption.Suppress))
@@ -96,11 +111,10 @@ namespace Gaev.Blog.Examples
                         if (iteration == 1)
                             SimulateDeadlock();
                         else
-                            ExecuteSql("INSERT Logs VALUES(3)");
+                            ExecuteSql("INSERT Logs VALUES(2)");
                     });
 
-                ExecuteSql("INSERT Logs VALUES(4)");
-                ExecuteSql("INSERT Logs VALUES(5)");
+                ExecuteSql("INSERT Logs VALUES(3)");
 
                 transaction.Complete();
             }
@@ -128,9 +142,12 @@ namespace Gaev.Blog.Examples
         private static void SimulateDeadlock()
         {
             // https://stackoverflow.com/a/39299800/1400547
-            ExecuteSql("IF EXISTS (SELECT * FROM sys.types WHERE name = 'IntIntSet') DROP TYPE [dbo].[IntIntSet]");
-            ExecuteSql("CREATE TYPE dbo.IntIntSet AS TABLE(Value0 Int NOT NULL,Value1 Int NOT NULL)");
-            ExecuteSql("DECLARE @myPK dbo.IntIntSet;");
+            using (Transaction.Current == null ? new TransactionScope() : null)
+            {
+                ExecuteSql("IF EXISTS (SELECT * FROM sys.types WHERE name = 'IntIntSet') DROP TYPE [dbo].[IntIntSet]");
+                ExecuteSql("CREATE TYPE dbo.IntIntSet AS TABLE(Value0 Int NOT NULL,Value1 Int NOT NULL)");
+                ExecuteSql("DECLARE @myPK dbo.IntIntSet;");
+            }
         }
 
         [SetUp]
