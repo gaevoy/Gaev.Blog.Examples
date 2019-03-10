@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Transactions;
 using NUnit.Framework;
@@ -13,141 +14,129 @@ namespace Gaev.Blog.Examples
         [Test]
         public void Reproduction1()
         {
-            using (var transaction = new TransactionScope())
+            TestDelegate act = () =>
             {
-                ExecuteSql("INSERT Logs VALUES(1)");
-
-                var iteration = 0;
-                RetryIfDeadlock(() =>
+                // Given
+                using (var transaction = new TransactionScope())
                 {
-                    iteration++;
-                    if (iteration == 1)
-                        SimulateDeadlock();
-                    else
-                        ExecuteSql("INSERT Logs VALUES(2)");
-                });
+                    // When
+                    ExecuteSql("INSERT Logs VALUES(1)");
+                    RetryIfDeadlock(iteration =>
+                    {
+                        if (iteration == 1)
+                            SimulateDeadlock();
+                        else
+                            ExecuteSql("INSERT Logs VALUES(2)");
+                    });
+                    ExecuteSql("INSERT Logs VALUES(3)");
+                    transaction.Complete();
+                }
+            };
 
-                ExecuteSql("INSERT Logs VALUES(3)");
-
-                transaction.Complete();
-            }
+            // Then
+            Assert.Multiple(() =>
+            {
+                Assert.That(act, Throws.Nothing);
+                Assert.That(GetLogs(), Is.EquivalentTo(new[] {1, 2, 3}));
+            });
         }
 
         [Test]
         public void Reproduction2()
         {
-            using (var transaction = new TransactionScope())
+            TestDelegate act = () =>
             {
-                ExecuteSql("INSERT Logs VALUES(1)");
-                try
+                // Given
+                using (var transaction = new TransactionScope())
                 {
-                    SimulateDeadlock();
+                    // When
+                    ExecuteSql("INSERT Logs VALUES(1)");
+                    try { SimulateDeadlock(); } catch (Exception) { }
+                    ExecuteSql("INSERT Logs VALUES(2)");
+                    ExecuteSql("INSERT Logs VALUES(3)");
+                    transaction.Complete();
                 }
-                catch (SqlException)
-                {
-                }
+            };
 
-                ExecuteSql("INSERT Logs VALUES(2)");
-                ExecuteSql("INSERT Logs VALUES(3)");
-
-                transaction.Complete();
-            }
+            // Then
+            Assert.Multiple(() =>
+            {
+                Assert.That(act, Throws.Nothing);
+                Assert.That(GetLogs(), Is.EquivalentTo(new[] {1, 2, 3}));
+            });
         }
 
         [Test]
         public void Reproduction3()
         {
-            // https://stackoverflow.com/a/5623877/1400547
-            using (var transaction = new TransactionScope())
+            TestDelegate act = () =>
             {
-                ExecuteSql("INSERT Logs VALUES(1)");
-                try
+                // Given
+                using (var transaction = new TransactionScope())
                 {
-                    ExecuteSql("INSERT Logs VALUES('two')");
+                    // When
+                    ExecuteSql("INSERT Logs VALUES(1)");
+                    try { ExecuteSql("INSERT Logs VALUES('oops')"); } catch (Exception) { }
+                    ExecuteSql("INSERT Logs VALUES(2)");
+                    ExecuteSql("INSERT Logs VALUES(3)");
+                    transaction.Complete();
                 }
-                catch (SqlException)
-                {
-                }
+            };
 
-                ExecuteSql("INSERT Logs VALUES(3)");
-
-                transaction.Complete();
-            }
+            // Then
+            Assert.Multiple(() =>
+            {
+                Assert.That(act, Throws.Nothing);
+                Assert.That(GetLogs(), Is.EquivalentTo(new[] {1, 2, 3}));
+            });
+            // https://stackoverflow.com/a/5623877/1400547
         }
 
         [Test]
         public void Fix1()
         {
-            var iteration = 0;
-            RetryIfDeadlock(() =>
+            RetryIfDeadlock(iteration =>
             {
-                iteration++;
+                // Given
                 using (var transaction = new TransactionScope())
                 {
+                    // When
                     ExecuteSql("INSERT Logs VALUES(1)");
                     if (iteration == 1)
                         SimulateDeadlock();
                     else
                         ExecuteSql("INSERT Logs VALUES(2)");
                     ExecuteSql("INSERT Logs VALUES(3)");
-
                     transaction.Complete();
                 }
             });
+
+            // Then
+            Assert.That(GetLogs(), Is.EquivalentTo(new[] {1, 2, 3}));
         }
 
         [Test]
         public void Fix2()
         {
+            // Given
             using (var transaction = new TransactionScope())
             {
+                // When
                 ExecuteSql("INSERT Logs VALUES(1)");
-
-                var iteration = 0;
                 using (new TransactionScope(TransactionScopeOption.Suppress))
-                    RetryIfDeadlock(() =>
+                    RetryIfDeadlock(iteration =>
                     {
-                        iteration++;
                         if (iteration == 1)
                             SimulateDeadlock();
                         else
                             ExecuteSql("INSERT Logs VALUES(2)");
                     });
-
                 ExecuteSql("INSERT Logs VALUES(3)");
-
                 transaction.Complete();
             }
-        }
 
-        private static void RetryIfDeadlock(Action act)
-        {
-            // https://stackoverflow.com/a/13159533/1400547
-            var retryCount = 0;
-            while (retryCount < 3)
-                try
-                {
-                    act();
-                    break;
-                }
-                catch (SqlException e)
-                {
-                    if (e.Number == 1205)
-                        retryCount++;
-                    else
-                        throw;
-                }
-        }
-
-        private static void SimulateDeadlock()
-        {
-            // https://stackoverflow.com/a/39299800/1400547
-            using (Transaction.Current == null ? new TransactionScope() : null)
-            {
-                ExecuteSql("IF EXISTS (SELECT * FROM sys.types WHERE name = 'IntIntSet') DROP TYPE [dbo].[IntIntSet]");
-                ExecuteSql("CREATE TYPE dbo.IntIntSet AS TABLE(Value0 Int NOT NULL,Value1 Int NOT NULL)");
-                ExecuteSql("DECLARE @myPK dbo.IntIntSet;");
-            }
+            // Then
+            Assert.That(GetLogs(), Is.EquivalentTo(new[] {1, 2, 3}));
         }
 
         [SetUp]
@@ -164,6 +153,49 @@ namespace Gaev.Blog.Examples
                 var cmd = con.CreateCommand();
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
+            }
+        }
+
+        private static void SimulateDeadlock()
+        {
+            // https://stackoverflow.com/a/39299800/1400547
+            using (Transaction.Current == null ? new TransactionScope() : null)
+            {
+                ExecuteSql("IF EXISTS (SELECT * FROM sys.types WHERE name = 'IntIntSet') DROP TYPE [dbo].[IntIntSet]");
+                ExecuteSql("CREATE TYPE dbo.IntIntSet AS TABLE(Value0 Int NOT NULL,Value1 Int NOT NULL)");
+                ExecuteSql("DECLARE @myPK dbo.IntIntSet;");
+            }
+        }
+
+        private static void RetryIfDeadlock(Action<int> act)
+        {
+            // https://stackoverflow.com/a/13159533/1400547
+            var iteration = 1;
+            while (iteration <= 3)
+                try
+                {
+                    act(iteration);
+                    break;
+                }
+                catch (SqlException e)
+                {
+                    if (e.Number == 1205)
+                        iteration++;
+                    else
+                        throw;
+                }
+        }
+
+        private static IEnumerable<int> GetLogs()
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var cmd = con.CreateCommand();
+                cmd.CommandText = "SELECT Id FROM Logs";
+                using (var dtr = cmd.ExecuteReader())
+                    while (dtr.Read())
+                        yield return (int) dtr["Id"];
             }
         }
     }
