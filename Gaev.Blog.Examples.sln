@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.Transact
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.HelloSshDeploy", "Gaev.Blog.Examples.HelloSshDeploy\Gaev.Blog.Examples.HelloSshDeploy.csproj", "{CD584797-828B-4217-9581-40D9B8D8FDFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.SqlQueue", "Gaev.Blog.Examples.SqlQueue\Gaev.Blog.Examples.SqlQueue.csproj", "{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,9 @@ Global
 		{CD584797-828B-4217-9581-40D9B8D8FDFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD584797-828B-4217-9581-40D9B8D8FDFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD584797-828B-4217-9581-40D9B8D8FDFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
