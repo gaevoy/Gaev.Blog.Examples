@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.HelloSsh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.SqlQueue", "Gaev.Blog.Examples.SqlQueue\Gaev.Blog.Examples.SqlQueue.csproj", "{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.ScriptInString", "Gaev.Blog.Examples.ScriptInString\Gaev.Blog.Examples.ScriptInString.csproj", "{C2F4CD54-6F64-4CDA-AD8E-F5EC9FBCE800}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +80,9 @@ Global
 		{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADAFF4C9-05D6-4E29-BD59-A134BCD68DBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2F4CD54-6F64-4CDA-AD8E-F5EC9FBCE800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2F4CD54-6F64-4CDA-AD8E-F5EC9FBCE800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2F4CD54-6F64-4CDA-AD8E-F5EC9FBCE800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2F4CD54-6F64-4CDA-AD8E-F5EC9FBCE800}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

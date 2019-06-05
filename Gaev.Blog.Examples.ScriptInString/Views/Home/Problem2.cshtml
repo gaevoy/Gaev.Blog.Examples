@@ -1,0 +1,16 @@
+﻿<html>
+<body>
+
+<pre id="content"></pre>
+<script>
+var clientModel = [
+    {"Name":"<script>alert(1);</script>"},
+    {"Name":"<script>alert(2);</script>"}
+];
+var content = document.getElementById("content");
+content.innerText = clientModel.map(e => e.Name).join("\n");
+</script>
+
+</body>
+</html>
+<!-- https://stackoverflow.com/a/1659762 -->
