@@ -16,9 +16,9 @@
 <section class="sing-in">
     <h1>Sign-in via Keybase</h1>
     <p>Windows terminal:</p>
-    <textarea class="win terminal">keybase pgp sign -m {challenge} | powershell -command "Invoke-WebRequest -Uri https://app.gaevoy.com/keybase-signin-demo/api/{challenge} -Method POST -Headers @{'Content-Type' = 'application/json'} -Body $(@($Input) -join \"`n\")"</textarea>
+    <textarea class="win terminal">keybase pgp sign -d -m {challenge} | powershell -command "Invoke-WebRequest -Uri https://app.gaevoy.com/keybase-signin-demo/api/{challenge} -Method POST -Headers @{'Content-Type' = 'application/json'} -Body $(@($Input) -join \"`n\")"</textarea>
     <p>Linux terminal:</p>
-    <textarea class="linux terminal">keybase pgp sign -m {challenge} | curl -X POST --header "Content-Type: application/json" --data-binary @- https://app.gaevoy.com/keybase-signin-demo/api/{challenge}</textarea>
+    <textarea class="linux terminal">keybase pgp sign -d -m {challenge} | curl -X POST --header "Content-Type: application/json" --data-binary @- https://app.gaevoy.com/keybase-signin-demo/api/{challenge}</textarea>
 </section>
 <section class="authorized hidden">
     <h1>Authorized via Keybase</h1>
