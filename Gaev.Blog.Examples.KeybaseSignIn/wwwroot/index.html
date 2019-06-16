@@ -27,14 +27,12 @@
         document.querySelector('.sing-in').classList.remove('d-none');
         document.querySelector('.sing-out').classList.add('d-none');
         let challenge = uuidv4();
-        document.querySelectorAll('.terminal').forEach(terminal => {
-            terminal.value = terminal.value.replace(/{challenge}/g, challenge);
-            terminal.value = terminal.value.replace("https://app.gaevoy.com/keybase-signin-demo", "http://localhost:5002");
-            terminal.addEventListener('focus', () => terminal.select());
+        document.querySelectorAll('.terminal').forEach(terminalEl => {
+            terminalEl.value = terminalEl.value.replace(/{challenge}/g, challenge);
+            terminalEl.addEventListener('focus', () => terminalEl.select());
         });
         fetch('session/' + challenge, {method: "POST"})
             .then(() => refreshView());
-
     }
 
     function showSignOutView(userName) {
@@ -47,9 +45,9 @@
                     fetch('session', {method: "DELETE"})
                         .then(() => window.location.reload());
                 });
-                let userName = document.querySelector('.sing-out .user-name');
-                userName.innerText = user.them[0].profile.full_name;
-                userName.href = 'https://keybase.io/' + user.them[0].basics.username;
+                let userNameEl = document.querySelector('.sing-out .user-name');
+                userNameEl.innerText = user.them[0].profile.full_name;
+                userNameEl.href = 'https://keybase.io/' + user.them[0].basics.username;
             });
     }
 
@@ -66,11 +64,11 @@
         <form>
             <div class="form-label">
                 <label for="winTerminal">For Windows console</label>
-                <textarea class="form-control terminal" id="winTerminal" rows="3">keybase pgp sign -d -m {challenge} | powershell -command "Invoke-WebRequest -Uri https://app.gaevoy.com/keybase-signin-demo/session/{challenge} -Method PUT -Headers @{'Content-Type' = 'application/json'} -Body $(@($Input) -join \"`n\")"</textarea>
+                <textarea class="form-control terminal" id="winTerminal" rows="3">keybase pgp sign -d -m {challenge} | powershell -command "Invoke-WebRequest -Uri https://app.gaevoy.com/keybase-sign-in/session/{challenge} -Method PUT -Headers @{'Content-Type' = 'application/json'} -Body $(@($Input) -join \"`n\")"</textarea>
             </div>
             <div class="form-label">
                 <label for="linuxTerminal">For Linux console</label>
-                <textarea class="form-control terminal" id="linuxTerminal" rows="3">keybase pgp sign -d -m {challenge} | curl -X PUT --header "Content-Type: application/json" --data-binary @- https://app.gaevoy.com/keybase-signin-demo/session/{challenge}</textarea>
+                <textarea class="form-control terminal" id="linuxTerminal" rows="3">keybase pgp sign -d -m {challenge} | curl -k -X PUT --header "Content-Type: application/json" --data-binary @- https://app.gaevoy.com/keybase-sign-in/session/{challenge}</textarea>
             </div>
         </form>
     </section>
