@@ -5,12 +5,13 @@ function initSignInForm() {
         terminal.value = terminal.value.replace("https://app.gaevoy.com/keybase-signin-demo", "http://localhost:5002");
     });
 
-    fetch('api/' + challenge)
+    fetch('session/' + challenge, {method: "POST"})
+        .then(() => fetch('session'))
         .then(resp => resp.json())
         .then(resp => {
             console.log(resp);
-            if (resp.keyOwner)
-                return fetch('https://keybase.io/_/api/1.0/user/lookup.json?usernames=' + resp.keyOwner);
+            if (resp.isAuthenticated)
+                return fetch('https://keybase.io/_/api/1.0/user/lookup.json?usernames=' + resp.name);
         })
         .then(resp => resp.json())
         .then(resp => {

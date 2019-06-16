@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign-in via Keybase demo</title>
     <link rel="stylesheet" href="main.css">
-    <script src="kbpgp-2.1.0-min.js"></script>
     <script src="main.js"></script>
 </head>
 <body>
@@ -16,9 +15,9 @@
 <section class="sing-in">
     <h1>Sign-in via Keybase</h1>
     <p>Windows terminal:</p>
-    <textarea class="win terminal">keybase pgp sign -d -m {challenge} | powershell -command "Invoke-WebRequest -Uri https://app.gaevoy.com/keybase-signin-demo/api/{challenge} -Method POST -Headers @{'Content-Type' = 'application/json'} -Body $(@($Input) -join \"`n\")"</textarea>
+    <textarea class="win terminal">keybase pgp sign -d -m {challenge} | powershell -command "Invoke-WebRequest -Uri https://app.gaevoy.com/keybase-signin-demo/session/{challenge} -Method PUT -Headers @{'Content-Type' = 'application/json'} -Body $(@($Input) -join \"`n\")"</textarea>
     <p>Linux terminal:</p>
-    <textarea class="linux terminal">keybase pgp sign -d -m {challenge} | curl -X POST --header "Content-Type: application/json" --data-binary @- https://app.gaevoy.com/keybase-signin-demo/api/{challenge}</textarea>
+    <textarea class="linux terminal">keybase pgp sign -d -m {challenge} | curl -X PUT --header "Content-Type: application/json" --data-binary @- https://app.gaevoy.com/keybase-signin-demo/session/{challenge}</textarea>
 </section>
 <section class="authorized hidden">
     <h1>Authorized via Keybase</h1>

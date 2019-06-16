@@ -1,28 +1,27 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace Gaev.Blog.Examples.Controllers
 {
-    [Route("api")]
-    public class KeybaseSignInController : ControllerBase
+    [Route("session")]
+    public class SessionController : ControllerBase
     {
         private static readonly ConcurrentDictionary<string, TaskCompletionSource<SignatureResult>> Clients =
             new ConcurrentDictionary<string, TaskCompletionSource<SignatureResult>>();
 
-        [HttpGet("{challenge}")]
-        public async Task<SignatureResult> WaitForSignIn(string challenge)
+        [HttpPost("{challenge}")]
+        public async Task SignIn(string challenge)
         {
             Response.Headers["Cache-Control"] = "no-cache";
             Response.Headers["X-Accel-Buffering"] = "no";
@@ -32,19 +31,13 @@ namespace Gaev.Blog.Examples.Controllers
             Clients.TryRemove(challenge, out _);
             if (result.IsSignatureValid)
             {
-                var identity = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, result.KeyOwner)
-                }, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(identity), new AuthenticationProperties {IsPersistent = true});
+                var identity = new GenericIdentity(result.KeyOwner, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
             }
-
-            return result;
         }
 
-        [HttpPost("{challenge}")]
-        public async Task VerifyChallengeSignature(string challenge)
+        [HttpPut("{challenge}")]
+        public async Task ProveKeyOwnership(string challenge)
         {
             string body = new StreamReader(Request.Body).ReadToEnd();
             PgpSignature signature = ParsePgpSignature(body);
@@ -60,12 +53,20 @@ namespace Gaev.Blog.Examples.Controllers
             });
         }
 
-        [HttpGet("test")]
-        public string Test()
+        [HttpGet]
+        public dynamic GetCurrentUser()
         {
-            return User.Identity.IsAuthenticated
-                ? $"Hello, {User.Identity.Name}"
-                : "Hello, anonymous";
+            return new
+            {
+                User.Identity.IsAuthenticated,
+                User.Identity.Name
+            };
+        }
+
+        [HttpDelete]
+        public async Task SignOut()
+        {
+            await HttpContext.SignOutAsync();
         }
 
         private static bool VerifySignature(PgpPublicKey publicKey, string payload, PgpSignature signature)

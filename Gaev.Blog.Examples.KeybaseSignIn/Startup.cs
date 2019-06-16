@@ -11,14 +11,14 @@ namespace Gaev.Blog.Examples
         {
             services.AddMvc();
             services
-                .AddAuthentication(opt => { opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme; })
-                .AddCookie(opt => { });
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) =>
             app
-                .UseMvc()
                 .UseAuthentication()
+                .UseMvc()
                 .UseDefaultFiles()
                 .UseStaticFiles();
     }
