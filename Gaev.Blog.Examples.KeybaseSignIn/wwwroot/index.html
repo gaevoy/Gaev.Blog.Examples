@@ -12,7 +12,6 @@
 
     function refreshView() {
         fetch('session')
-            .then(() => fetch('session'))
             .then(resp => resp.json())
             .then(user => {
                 if (user.isAuthenticated) {
@@ -24,12 +23,24 @@
     }
 
     function showSignInView() {
+        let challenge = uuidv4();
         document.querySelector('.sing-in').classList.remove('d-none');
         document.querySelector('.sing-out').classList.add('d-none');
-        let challenge = uuidv4();
-        document.querySelectorAll('.terminal').forEach(terminalEl => {
+        let challengeEl = document.querySelector('.sing-in .challenge');
+        challengeEl.innerText = challenge;
+        challengeEl.addEventListener('click', () => navigator.clipboard && navigator.clipboard.writeText(challenge));
+        document.querySelectorAll('.sing-in .terminal').forEach(terminalEl => {
             terminalEl.value = terminalEl.value.replace(/{challenge}/g, challenge);
             terminalEl.addEventListener('focus', () => terminalEl.select());
+        });
+        document.querySelector('.sing-in .challenge-accepted').addEventListener('click', () => {
+            let signature = document.querySelector('.sing-in .keybase-signature').value;
+            signature = signature.replace(/[\s\S]*(-----BEGIN PGP SIGNATURE-----[\s\S]+-----END PGP SIGNATURE-----)[\s\S]*/, '$1');
+            fetch('session/' + challenge, {
+                method: "PUT",
+                body: signature,
+                headers: {'Content-Type': 'application/json'}
+            });
         });
         fetch('session/' + challenge, {method: "POST"})
             .then(() => refreshView());
@@ -59,21 +70,37 @@
 </script>
 <div class="container">
     <section class="sing-in d-none">
-        <h1>Sign-in via Keybase</h1>
-        <p>Run the following console command in order to sign in.</p>
+        <h1>Sign-in via <a href="https://keybase.io/" target="_blank">Keybase</a></h1>
+        <p>Run the following console command in order to sign-in. You have the following options:</p>
         <form>
             <div class="form-label">
-                <label for="winTerminal">For Windows console</label>
-                <textarea class="form-control terminal" id="winTerminal" rows="3">keybase pgp sign -d -m {challenge} | powershell -command "Invoke-WebRequest -Uri https://app.gaevoy.com/keybase-sign-in/session/{challenge} -Method PUT -Headers @{'Content-Type' = 'application/json'} -Body $(@($Input) -join \"`n\")"</textarea>
+                <label for="winTerminal">
+                    1. Run <span class="badge badge-light">Windows</span> console
+                </label>
+                <textarea class="form-control terminal" id="winTerminal" rows="3" readonly>keybase pgp sign -d -m {challenge} | powershell -command "Invoke-WebRequest -Uri https://app.gaevoy.com/keybase-sign-in/session/{challenge} -Method PUT -Headers @{'Content-Type' = 'application/json'} -Body $(@($Input) -join \"`n\")"</textarea>
             </div>
             <div class="form-label">
-                <label for="linuxTerminal">For Linux console</label>
-                <textarea class="form-control terminal" id="linuxTerminal" rows="3">keybase pgp sign -d -m {challenge} | curl -k -X PUT --header "Content-Type: application/json" --data-binary @- https://app.gaevoy.com/keybase-sign-in/session/{challenge}</textarea>
+                <label for="linuxTerminal">
+                    2. Run <span class="badge badge-light">Linux</span> console
+                </label>
+                <textarea class="form-control terminal" id="linuxTerminal" rows="3" readonly>keybase pgp sign -d -m {challenge} | curl -k -X PUT --header "Content-Type: application/json" --data-binary @- https://app.gaevoy.com/keybase-sign-in/session/{challenge}</textarea>
+            </div>
+            <div class="form-label">
+                <label for="keybaseSignature">
+                    3. Sign
+                    <a href="javascript:void(0)" class="challenge badge badge-primary"
+                       title="Click to copy to clipboard"></a>
+                    via <a href="https://keybase.io/sign" target="_blank">Keybase site</a>,
+                    paste below
+                    and <a href="javascript:void(0)" class="challenge-accepted badge badge-primary">click here</a>
+                </label>
+                <textarea class="form-control keybase-signature" rows="16"
+                          style="font-size: 10px;font-family: monospace;" id="keybaseSignature"></textarea>
             </div>
         </form>
     </section>
     <section class="sing-out d-none">
-        <h1>Welcome <a class="user-name"></a>.</h1>
+        <h1>Welcome, <a class="user-name"></a>!</h1>
         <p>You are authorized via Keybase.</p>
         <button class="btn btn-primary">Log out</button>
     </section>

@@ -17,21 +17,21 @@ namespace Gaev.Blog.Examples.Controllers
     [Route("session")]
     public class SessionController : ControllerBase
     {
-        private static readonly ConcurrentDictionary<string, TaskCompletionSource<SignatureResult>> Clients =
-            new ConcurrentDictionary<string, TaskCompletionSource<SignatureResult>>();
+        private static readonly ConcurrentDictionary<string, TaskCompletionSource<string>> Clients =
+            new ConcurrentDictionary<string, TaskCompletionSource<string>>();
 
         [HttpPost("{challenge}")]
         public async Task SignIn(string challenge)
         {
             Response.Headers["Cache-Control"] = "no-cache";
             Response.Headers["X-Accel-Buffering"] = "no";
-            var onResultReady = Clients[challenge] = new TaskCompletionSource<SignatureResult>();
-            HttpContext.RequestAborted.Register(() => onResultReady.SetResult(new SignatureResult()));
-            var result = await onResultReady.Task;
+            var client = Clients[challenge] = new TaskCompletionSource<string>();
+            HttpContext.RequestAborted.Register(() => client.SetResult(null));
+            var userName = await client.Task;
             Clients.TryRemove(challenge, out _);
-            if (result.IsSignatureValid)
+            if (userName != null)
             {
-                var identity = new GenericIdentity(result.KeyOwner, CookieAuthenticationDefaults.AuthenticationScheme);
+                var identity = new GenericIdentity(userName, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
             }
         }
@@ -43,14 +43,11 @@ namespace Gaev.Blog.Examples.Controllers
             PgpSignature signature = ParsePgpSignature(body);
             KeybaseKey keybaseKey = await GetPublicKeyFromKeybase(signature.KeyId);
             PgpPublicKey publicKey = ParsePgpPublicKey(keybaseKey.Bundle, signature.KeyId);
-            bool isSignatureValid = VerifySignature(publicKey, challenge, signature);
+            if (!VerifySignature(publicKey, challenge, signature))
+                return;
             if (!Clients.TryGetValue(challenge, out var client))
                 return;
-            client.SetResult(new SignatureResult
-            {
-                KeyOwner = keybaseKey.Username,
-                IsSignatureValid = isSignatureValid
-            });
+            client.SetResult(keybaseKey.Username);
         }
 
         [HttpGet]
@@ -111,12 +108,6 @@ namespace Gaev.Blog.Examples.Controllers
         {
             public string Bundle { get; set; }
             public string Username { get; set; }
-        }
-
-        public class SignatureResult
-        {
-            public string KeyOwner { get; set; }
-            public bool IsSignatureValid { get; set; }
         }
     }
 }
