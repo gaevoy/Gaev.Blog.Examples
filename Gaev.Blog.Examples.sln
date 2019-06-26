@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.ScriptIn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.KeybaseSignIn", "Gaev.Blog.Examples.KeybaseSignIn\Gaev.Blog.Examples.KeybaseSignIn.csproj", "{FBFB55B2-4911-42A5-825D-F103E6016036}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.SerializationTests", "Gaev.Blog.Examples.SerializationTests\Gaev.Blog.Examples.SerializationTests.csproj", "{CED62EC3-C199-4124-9A68-83D5349F5FDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,5 +92,9 @@ Global
 		{FBFB55B2-4911-42A5-825D-F103E6016036}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBFB55B2-4911-42A5-825D-F103E6016036}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBFB55B2-4911-42A5-825D-F103E6016036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CED62EC3-C199-4124-9A68-83D5349F5FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED62EC3-C199-4124-9A68-83D5349F5FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED62EC3-C199-4124-9A68-83D5349F5FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED62EC3-C199-4124-9A68-83D5349F5FDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
