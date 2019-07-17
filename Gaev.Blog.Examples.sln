@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.KeybaseS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.SerializationTests", "Gaev.Blog.Examples.SerializationTests\Gaev.Blog.Examples.SerializationTests.csproj", "{CED62EC3-C199-4124-9A68-83D5349F5FDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.WarmUpAspNetMvc", "Gaev.Blog.Examples.WarmUpAspNetMvc\Gaev.Blog.Examples.WarmUpAspNetMvc.csproj", "{4719104E-93C8-47B9-B78C-E8E040E945E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,5 +98,9 @@ Global
 		{CED62EC3-C199-4124-9A68-83D5349F5FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CED62EC3-C199-4124-9A68-83D5349F5FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CED62EC3-C199-4124-9A68-83D5349F5FDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4719104E-93C8-47B9-B78C-E8E040E945E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4719104E-93C8-47B9-B78C-E8E040E945E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4719104E-93C8-47B9-B78C-E8E040E945E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4719104E-93C8-47B9-B78C-E8E040E945E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
