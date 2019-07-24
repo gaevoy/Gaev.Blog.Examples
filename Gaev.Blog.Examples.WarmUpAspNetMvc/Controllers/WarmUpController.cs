@@ -25,13 +25,13 @@ namespace Gaev.Blog.Examples.Controllers
             );
             _isWarm = true;
         }
-        // https://serverfault.com/questions/590865/how-can-i-warm-up-my-asp-net-mvc-webapp-after-an-app-pool-recycle
 
         private Task WarmUp(Action<HtmlHelper> act)
         {
             return Task.Factory.StartNew(() =>
             {
-                var httpContext = NewHttpContext(Request.Url.AbsoluteUri, new WarmUpUser());
+                var requestUrl = Request.Url.AbsoluteUri;
+                var httpContext = NewHttpContext(requestUrl, new WarmUpUser());
                 System.Web.HttpContext.Current = httpContext;
                 var htmlHelper = CreateHtmlHelper(httpContext);
                 act(htmlHelper);
