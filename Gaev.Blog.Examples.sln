@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.Serializ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.WarmUpAspNetMvc", "Gaev.Blog.Examples.WarmUpAspNetMvc\Gaev.Blog.Examples.WarmUpAspNetMvc.csproj", "{4719104E-93C8-47B9-B78C-E8E040E945E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.OrderOfEnumValues", "Gaev.Blog.Examples.OrderOfEnumValues\Gaev.Blog.Examples.OrderOfEnumValues.csproj", "{412E304B-3601-4C3D-BA14-5670EFC836AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,5 +104,9 @@ Global
 		{4719104E-93C8-47B9-B78C-E8E040E945E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4719104E-93C8-47B9-B78C-E8E040E945E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4719104E-93C8-47B9-B78C-E8E040E945E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{412E304B-3601-4C3D-BA14-5670EFC836AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{412E304B-3601-4C3D-BA14-5670EFC836AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{412E304B-3601-4C3D-BA14-5670EFC836AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{412E304B-3601-4C3D-BA14-5670EFC836AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
