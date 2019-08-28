@@ -4,37 +4,37 @@ namespace Gaev.Blog.Examples
 {
     public class CustomerServiceViaInterface: ICustomerService
     {
-        private readonly IGuidGenerator _guidGenerator;
-        private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IIdGenerator _idGenerator;
+        private readonly ISystemTime _systemTime;
 
-        public CustomerServiceViaInterface(IGuidGenerator guidGenerator, IDateTimeProvider dateTimeProvider)
+        public CustomerServiceViaInterface(IIdGenerator idGenerator, ISystemTime systemTime)
         {
-            _guidGenerator = guidGenerator;
-            _dateTimeProvider = dateTimeProvider;
+            _idGenerator = idGenerator;
+            _systemTime = systemTime;
         }
 
         public Customer RegisterCustomer(string name)
         {
-            return new Customer(_guidGenerator.NewGuid(), _dateTimeProvider.GetUtcNow(), name);
+            return new Customer(_idGenerator.NewId(), _systemTime.GetUtcNow(), name);
         }
     }
 
-    public interface IGuidGenerator
+    public interface IIdGenerator
     {
-        Guid NewGuid();
+        Guid NewId();
     }
 
-    public class GuidGenerator : IGuidGenerator
+    public class IdGenerator : IIdGenerator
     {
-        public Guid NewGuid() => Guid.NewGuid();
+        public Guid NewId() => Guid.NewGuid();
     }
 
-    public interface IDateTimeProvider
+    public interface ISystemTime
     {
         DateTime GetUtcNow();
     }
 
-    public class DateTimeProvider : IDateTimeProvider
+    public class SystemTime : ISystemTime
     {
         public DateTime GetUtcNow() => DateTime.UtcNow;
     }
