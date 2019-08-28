@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Gaev.Blog.Examples
 {
-    public class DelegateVsInterfaceTests
+    public class DependencyInjectionComparisonTests
     {
         #region CustomerServiceViaDelegate
 
@@ -133,6 +133,58 @@ namespace Gaev.Blog.Examples
 
             // When
             var now = systemTime.GetUtcNow();
+
+            // Then
+            Assert.That(now, Is.EqualTo(DateTime.UtcNow).Within(50).Milliseconds);
+        }
+
+        #endregion
+
+        #region CustomerServiceViaVirtualMethod
+
+        [Test]
+        public void CustomerServiceViaVirtualMethod_should_register_customer()
+        {
+            // Given
+            var id = Guid.NewGuid();
+            var now = DateTime.UtcNow;
+            var name = Guid.NewGuid().ToString();
+            var service = Substitute.ForPartsOf<CustomerServiceViaVirtualMethod>();
+            service.When(e => e.NewId()).DoNotCallBase();
+            service.When(e => e.GetUtcNow()).DoNotCallBase();
+            service.NewId().Returns(id);
+            service.GetUtcNow().Returns(now);
+
+            // When
+            var customer = service.RegisterCustomer(name);
+
+            // Then
+            Assert.That(customer.Id, Is.EqualTo(id));
+            Assert.That(customer.CreatedAt, Is.EqualTo(now));
+            Assert.That(customer.Name, Is.EqualTo(name));
+        }
+
+        [Test]
+        public void CustomerServiceViaVirtualMethod_should_generate_unique_IDs()
+        {
+            // Given
+            var service = new CustomerServiceViaVirtualMethod();
+
+            // When
+            var ids = Enumerable.Range(0, 100).Select(_ => service.NewId()).ToList();
+
+            // Then
+            Assert.That(ids, Is.Unique);
+        }
+
+        [Test]
+        public void CustomerServiceViaVirtualMethod_should_get_current_UTC_date()
+        {
+            // Given
+            var service = new CustomerServiceViaVirtualMethod();
+
+            // When
+            var now = service.GetUtcNow();
 
             // Then
             Assert.That(now, Is.EqualTo(DateTime.UtcNow).Within(50).Milliseconds);
