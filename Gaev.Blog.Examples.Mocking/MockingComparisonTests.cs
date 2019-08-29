@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Gaev.Blog.Examples
 {
-    public class DependencyInjectionComparisonTests
+    public class MockingComparisonTests
     {
         #region CustomerServiceViaInterface
 
