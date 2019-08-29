@@ -8,69 +8,6 @@ namespace Gaev.Blog.Examples
 {
     public class DependencyInjectionComparisonTests
     {
-        #region CustomerServiceViaDelegate
-
-        [Test]
-        public void CustomerServiceViaDelegate_should_register_customer()
-        {
-            // Given
-            var id = Guid.NewGuid();
-            var now = DateTime.UtcNow;
-            var name = Guid.NewGuid().ToString();
-            var service = new CustomerServiceViaDelegate(newId: () => id, getUtcNow: () => now);
-
-            // When
-            var customer = service.RegisterCustomer(name);
-
-            // Then
-            Assert.That(customer.Id, Is.EqualTo(id));
-            Assert.That(customer.CreatedAt, Is.EqualTo(now));
-            Assert.That(customer.Name, Is.EqualTo(name));
-        }
-
-        [Test]
-        public void AutoFac_should_resolve_CustomerServiceViaDelegate()
-        {
-            // Given
-            var builder = new ContainerBuilder();
-            builder.RegisterType<CustomerServiceViaDelegate>().As<ICustomerService>();
-            var container = builder.Build();
-
-            // When
-            var service = container.Resolve<ICustomerService>();
-
-            // Then
-            Assert.That(service, Is.TypeOf<CustomerServiceViaDelegate>());
-        }
-
-        [Test]
-        public void CustomerServiceViaDelegate_should_generate_unique_IDs()
-        {
-            // Given
-            var service = new CustomerServiceViaDelegate();
-
-            // When
-            var ids = Enumerable.Range(0, 100).Select(_ => service.NewId()).ToList();
-
-            // Then
-            Assert.That(ids, Is.Unique);
-        }
-
-        [Test]
-        public void CustomerServiceViaDelegate_should_get_current_UTC_date()
-        {
-            // Given
-            var service = new CustomerServiceViaDelegate();
-
-            // When
-            var now = service.GetUtcNow();
-
-            // Then
-            Assert.That(now, Is.EqualTo(DateTime.UtcNow).Within(50).Milliseconds);
-        }
-
-        #endregion
-
         #region CustomerServiceViaInterface
 
         [Test]
@@ -133,6 +70,69 @@ namespace Gaev.Blog.Examples
 
             // When
             var now = systemTime.GetUtcNow();
+
+            // Then
+            Assert.That(now, Is.EqualTo(DateTime.UtcNow).Within(50).Milliseconds);
+        }
+
+        #endregion
+
+        #region CustomerServiceViaDelegate
+
+        [Test]
+        public void CustomerServiceViaDelegate_should_register_customer()
+        {
+            // Given
+            var id = Guid.NewGuid();
+            var now = DateTime.UtcNow;
+            var name = Guid.NewGuid().ToString();
+            var service = new CustomerServiceViaDelegate(newId: () => id, getUtcNow: () => now);
+
+            // When
+            var customer = service.RegisterCustomer(name);
+
+            // Then
+            Assert.That(customer.Id, Is.EqualTo(id));
+            Assert.That(customer.CreatedAt, Is.EqualTo(now));
+            Assert.That(customer.Name, Is.EqualTo(name));
+        }
+
+        [Test]
+        public void AutoFac_should_resolve_CustomerServiceViaDelegate()
+        {
+            // Given
+            var builder = new ContainerBuilder();
+            builder.RegisterType<CustomerServiceViaDelegate>().As<ICustomerService>();
+            var container = builder.Build();
+
+            // When
+            var service = container.Resolve<ICustomerService>();
+
+            // Then
+            Assert.That(service, Is.TypeOf<CustomerServiceViaDelegate>());
+        }
+
+        [Test]
+        public void CustomerServiceViaDelegate_should_generate_unique_IDs()
+        {
+            // Given
+            var service = new CustomerServiceViaDelegate();
+
+            // When
+            var ids = Enumerable.Range(0, 100).Select(_ => service.NewId()).ToList();
+
+            // Then
+            Assert.That(ids, Is.Unique);
+        }
+
+        [Test]
+        public void CustomerServiceViaDelegate_should_get_current_UTC_date()
+        {
+            // Given
+            var service = new CustomerServiceViaDelegate();
+
+            // When
+            var now = service.GetUtcNow();
 
             // Then
             Assert.That(now, Is.EqualTo(DateTime.UtcNow).Within(50).Milliseconds);
