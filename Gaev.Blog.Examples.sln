@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.OrderOfE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.Mocking", "Gaev.Blog.Examples.Mocking\Gaev.Blog.Examples.Mocking.csproj", "{DC585A8C-A3E9-43D3-9592-F4685B16759B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.MiniProfiler3Bug", "Gaev.Blog.Examples.MiniProfiler3Bug\Gaev.Blog.Examples.MiniProfiler3Bug.csproj", "{ACD0EFA6-8E0A-47E2-82DF-362AB75B2672}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,5 +116,9 @@ Global
 		{DC585A8C-A3E9-43D3-9592-F4685B16759B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC585A8C-A3E9-43D3-9592-F4685B16759B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC585A8C-A3E9-43D3-9592-F4685B16759B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACD0EFA6-8E0A-47E2-82DF-362AB75B2672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACD0EFA6-8E0A-47E2-82DF-362AB75B2672}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACD0EFA6-8E0A-47E2-82DF-362AB75B2672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACD0EFA6-8E0A-47E2-82DF-362AB75B2672}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
