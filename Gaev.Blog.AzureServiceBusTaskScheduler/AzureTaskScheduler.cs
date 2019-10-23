@@ -30,7 +30,7 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
                 var next = await task(message);
                 if (next != null)
                     await client.SendAsync(next);
-            }, new MessageHandlerOptions(exceptionReceivedHandler: _ => Task.CompletedTask));
+            }, new MessageHandlerOptions(OnError));
 
             try
             {
@@ -53,6 +53,12 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
             }
 
             return false;
+        }
+
+        private static Task OnError(ExceptionReceivedEventArgs e)
+        {
+            Console.WriteLine(e.Exception);
+            return Task.CompletedTask;
         }
     }
 }

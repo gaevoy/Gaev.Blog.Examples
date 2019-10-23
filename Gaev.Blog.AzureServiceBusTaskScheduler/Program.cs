@@ -19,10 +19,10 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
                 cancellation.Cancel();
             };
             var scheduler = new AzureTaskScheduler(ConnectionString);
-            await scheduler.Run(queueName: "TakeABreak", task: Process, cancellation.Token);
+            await scheduler.Run(queueName: "TakeABreak", task: TakeABreak, cancellation.Token);
         }
 
-        static async Task<Message> Process(Message message)
+        static async Task<Message> TakeABreak(Message message)
         {
             if (message != null)
             {
