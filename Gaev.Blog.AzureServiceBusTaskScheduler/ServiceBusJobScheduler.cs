@@ -17,6 +17,7 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
 
         public async Task Run(
             string queueName,
+            Func<Message> init,
             Func<Message, Task<Message>> job,
             CancellationToken cancellation
         )
@@ -24,7 +25,7 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
             var queueClient = new QueueClient(_connectionString, queueName);
             var created = await EnsureQueueCreated(queueClient.QueueName);
             if (created)
-                await queueClient.SendAsync(await job(null));
+                await queueClient.SendAsync(init());
             queueClient.RegisterMessageHandler(
                 handler: async (message, _) =>
                 {
