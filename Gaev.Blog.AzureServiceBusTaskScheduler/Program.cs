@@ -18,13 +18,14 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
                 e.Cancel = true;
                 cancellation.Cancel();
             };
-            var scheduler = new AzureTaskScheduler(ConnectionString);
-            await scheduler.Run(queueName: "TakeABreak", task: TakeABreak, cancellation.Token);
+            var scheduler = new ServiceBusJobScheduler(ConnectionString);
+            await scheduler.Run(queueName: "TakeABreak", job: TakeABreak, cancellation.Token);
         }
 
         static async Task<Message> TakeABreak(Message message)
         {
-            if (message != null)
+            var initialization = message == null;
+            if (!initialization)
             {
                 Console.WriteLine($"Take a break! It is {message.ScheduledEnqueueTimeUtc.ToLocalTime():t}.");
                 await Task.Delay(100);
