@@ -32,7 +32,7 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
                     // Watch out for exceptions! By default, ServiceBus retries 10 times then move the message into dead-letter queue.
                     // Watch out for long-running jobs! By default, ServiceBus waits 5 minutes then returns the message back to the queue. 
                     var scheduledFor = message.ScheduledEnqueueTimeUtc.ToLocalTime();
-                    Console.WriteLine($"Take a break! It is {scheduledFor:t}.");
+                    Console.WriteLine($"Take a break! It is {scheduledFor:T}.");
                     await Task.Delay(100);
                     return new Message
                     {

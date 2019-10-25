@@ -23,7 +23,7 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
         )
         {
             var queueClient = new QueueClient(_connectionString, queueName);
-            var created = await EnsureQueueCreated(queueClient.QueueName);
+            var created = await EnsureQueueCreated(queueName);
             if (created)
                 await queueClient.SendAsync(init());
             queueClient.RegisterMessageHandler(
