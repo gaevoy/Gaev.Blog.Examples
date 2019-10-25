@@ -42,18 +42,21 @@ namespace Gaev.Blog.AzureServiceBusTaskScheduler
         private async Task<bool> EnsureQueueCreated(string queueName)
         {
             var client = new ManagementClient(_connectionString);
-            if (!await client.QueueExistsAsync(queueName))
+            for (int probe = 1;; probe++)
                 try
                 {
-                    await client.CreateQueueAsync(queueName);
-                    return true;
-                }
-                catch (ServiceBusException)
-                {
+                    if (!await client.QueueExistsAsync(queueName))
+                    {
+                        await client.CreateQueueAsync(queueName);
+                        return true;
+                    }
+
                     return false;
                 }
-
-            return false;
+                catch (ServiceBusException) when (probe < 3)
+                {
+                    await Task.Delay(100);
+                }
         }
 
         private static async Task Wait(CancellationToken cancellation)
