@@ -13,11 +13,11 @@ namespace Gaev.Blog.SecuredAppSettingsJson
                 .Build()
                 .Decrypt(keyPath: "CipherKey", cipherPrefix: "CipherText:");
             Console.WriteLine($@"
-AppName:            {config["AppName"]}
-DbConnectionString: {config["DbConnectionString"]}
-SshKey:             {config["SshKey"]}
-SendGrid.ApiKey:    {config["SendGrid:ApiKey"]}
-Partner.SftpUrl:    {config["Partner:SftpUrl"]}
+AppName:               {config["AppName"]}
+DbConnectionString:    {config["DbConnectionString"]}
+CertificatePassphrase: {config["CertificatePassphrase"]}
+SendGrid.ApiKey:       {config["SendGrid:ApiKey"]}
+Partner.SftpUrl:       {config["Partner:SftpUrl"]}
 ");
         }
     }
