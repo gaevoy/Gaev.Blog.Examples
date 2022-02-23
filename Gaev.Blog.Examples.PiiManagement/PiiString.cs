@@ -27,4 +27,10 @@ public class PiiString
             return _string.Equals(piiString._string);
         return _string.Equals(obj);
     }
+
+    public static bool operator ==(PiiString a, PiiString b)
+        => a?.Equals(b) == true;
+
+    public static bool operator !=(PiiString a, PiiString b)
+        => !(a == b);
 }

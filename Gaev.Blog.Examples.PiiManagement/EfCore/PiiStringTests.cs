@@ -33,6 +33,28 @@ public class PiiStringTests
     }
 
     [Test]
+    public async Task EfCore_queries_should_work()
+    {
+        // Given
+        await using var db = new TestDbContext();
+        await db.Database.EnsureCreatedAsync();
+        var givenUser = new User
+        {
+            Id = Guid.NewGuid(),
+            Name = "John Doe",
+            Email = "john.doe@test.com"
+        };
+
+        // When
+        db.Users.Add(givenUser);
+        await db.SaveChangesAsync();
+        db.DetachAll();
+        var savedUser = await db.Users
+            .Where(e => ((string)e.Email).Contains("john.doe@test.com") || e.Name == "bla")
+            .ToListAsync();
+    }
+
+    [Test]
     public async Task EfCore_should_encrypt()
     {
         // Given
