@@ -1,5 +1,4 @@
 using System.Text;
-using Gaev.Blog.Examples.PiiManagement.PiiSerializers;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
@@ -7,7 +6,7 @@ using NLog.Layouts;
 using NLog.Targets;
 using NUnit.Framework;
 
-namespace Gaev.Blog.Examples.PiiManagement.NLog;
+namespace Gaev.Blog.Examples.NLog;
 
 public class PiiStringTests
 {
@@ -16,11 +15,11 @@ public class PiiStringTests
     {
         LogManager.Setup().SetupSerialization(s =>
         {
-            var settings = new JsonSerializerSettings { Converters = { new NewtonsoftJson.PiiStringConverter() } };
+            var jsonConverter = new NewtonsoftJson.PiiStringConverter(new PiiAsSha256());
+            var settings = new JsonSerializerSettings {Converters = {jsonConverter}};
             s.RegisterJsonConverter(new NewtonsoftJsonConverter(settings));
         });
 
-        using var _ = new PiiScope(new Sha256());
         var logger = new LogFactory(WriteToConsoleConfig()).GetCurrentClassLogger();
         var user = new User
         {
@@ -29,7 +28,7 @@ public class PiiStringTests
         };
         logger.Info("The user is {@Data}", user);
         logger.Info("The email is {@Data}", user.Email);
-        logger.Info("The email is {@Data}", new { user.Email });
+        logger.Info("The email is {@Data}", new {user.Email});
     }
 
     [Test]
@@ -37,11 +36,11 @@ public class PiiStringTests
     {
         LogManager.Setup().SetupSerialization(s =>
         {
-            var settings = new JsonSerializerSettings { Converters = { new NewtonsoftJson.PiiStringConverter() } };
+            var jsonConverter = new NewtonsoftJson.PiiStringConverter(new PiiAsSha256());
+            var settings = new JsonSerializerSettings {Converters = {jsonConverter}};
             s.RegisterJsonConverter(new NewtonsoftJsonConverter(settings));
         });
 
-        using var _ = new PiiScope(new Sha256());
         var logger = new LogFactory(WriteJsonToConsoleConfig()).GetCurrentClassLogger();
         var user = new User
         {
@@ -50,7 +49,7 @@ public class PiiStringTests
         };
         logger.Info("The user is {@Data}", user);
         logger.Info("The email is {@Data}", user.Email);
-        logger.Info("The email is {@Data}", new { user.Email });
+        logger.Info("The email is {@Data}", new {user.Email});
     }
 
     private static LoggingConfiguration WriteToConsoleConfig()

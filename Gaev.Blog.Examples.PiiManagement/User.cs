@@ -1,6 +1,6 @@
 using System;
 
-namespace Gaev.Blog.Examples.PiiManagement;
+namespace Gaev.Blog.Examples;
 
 public class User
 {

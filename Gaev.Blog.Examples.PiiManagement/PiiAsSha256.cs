@@ -2,11 +2,11 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Gaev.Blog.Examples.PiiManagement.PiiSerializers;
+namespace Gaev.Blog.Examples;
 
-public class Sha256 : IPiiSerializer
+public class PiiAsSha256 : IPiiEncoder
 {
-    public string ToString(PiiString piiString)
+    public string ToSystemString(PiiString piiString)
     {
         var dataToHash = Encoding.UTF8.GetBytes(piiString.ToString());
         using var sha = SHA256.Create();
@@ -14,8 +14,5 @@ public class Sha256 : IPiiSerializer
         return Convert.ToBase64String(hashedBuffer);
     }
 
-    public PiiString FromString(string str)
-    {
-        throw new NotSupportedException();
-    }
+    public PiiString ToPiiString(string str) => throw new NotSupportedException();
 }

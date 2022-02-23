@@ -3,7 +3,7 @@ using System.Text.Json;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Gaev.Blog.Examples.PiiManagement.SystemTextJson;
+namespace Gaev.Blog.Examples.SystemTextJson;
 
 public class PiiStringTests
 {
@@ -16,7 +16,7 @@ public class PiiStringTests
             Name = "John Doe",
             Email = "john.doe@test.com"
         };
-        var settings = new JsonSerializerOptions { Converters = { new PiiStringConverter() } };
+        var settings = new JsonSerializerOptions { Converters = { new PiiStringConverter(new PiiAsPlainText()) } };
 
         // When
         var json = JsonSerializer.Serialize(user, settings);

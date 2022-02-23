@@ -1,20 +1,19 @@
-using Gaev.Blog.Examples.PiiManagement.PiiSerializers;
 using NUnit.Framework;
 using Serilog;
 
-namespace Gaev.Blog.Examples.PiiManagement.Serilog;
+namespace Gaev.Blog.Examples.Serilog;
 
 public class PiiStringTests
 {
     [Test]
     public void Serilog_should_work()
     {
+        var sha256 = new PiiAsSha256();
         var logger = new LoggerConfiguration()
             .WriteTo.Console()
-            .Destructure.ByTransforming<PiiString>(e => PiiScope.Serializer.ToString(e))
+            .Destructure.ByTransforming<PiiString>(e => sha256.ToSystemString(e))
             .CreateLogger();
 
-        using var _ = new PiiScope(new Sha256());
         var user = new User
         {
             Name = "John Doe",
@@ -22,6 +21,6 @@ public class PiiStringTests
         };
         logger.Information("The user is {@Data}", user);
         logger.Information("The email is {@Data}", user.Email);
-        logger.Information("The email is {@Data}", new { user.Email });
+        logger.Information("The email is {@Data}", new {user.Email});
     }
 }

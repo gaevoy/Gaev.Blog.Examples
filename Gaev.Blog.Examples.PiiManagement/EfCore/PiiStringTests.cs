@@ -5,7 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Gaev.Blog.Examples.PiiManagement.EfCore;
+namespace Gaev.Blog.Examples.EfCore;
 
 public class PiiStringTests
 {
@@ -13,7 +13,7 @@ public class PiiStringTests
     public async Task EfCore_should_work()
     {
         // Given
-        await using var db = new TestDbContext();
+        await using var db = new TestDbContext(new PiiAsPlainText());
         await db.Database.EnsureCreatedAsync();
         var givenUser = new User
         {
@@ -36,7 +36,7 @@ public class PiiStringTests
     public async Task EfCore_queries_should_work()
     {
         // Given
-        await using var db = new TestDbContext();
+        await using var db = new TestDbContext(new PiiAsPlainText());
         await db.Database.EnsureCreatedAsync();
         var givenUser = new User
         {
@@ -50,7 +50,7 @@ public class PiiStringTests
         await db.SaveChangesAsync();
         db.DetachAll();
         var savedUser = await db.Users
-            .Where(e => ((string)e.Email).Contains("john.doe@test.com") || e.Name == "bla")
+            .Where(e => ((string) e.Email).Contains("john.doe@test.com") || e.Name == "bla")
             .ToListAsync();
     }
 
@@ -58,8 +58,8 @@ public class PiiStringTests
     public async Task EfCore_should_encrypt()
     {
         // Given
-        using var _ = new PiiScope(new PiiSerializers.Aes128("hb50qBZSF0fcLSl9814PIqmO4gEZcJGB/Kd4fpTTBcU="));
-        await using var db = new TestDbContext();
+        var key = "hb50qBZSF0fcLSl9814PIqmO4gEZcJGB/Kd4fpTTBcU=";
+        await using var db = new TestDbContext(new PiiAsAes128(key));
         await db.Database.EnsureCreatedAsync();
         var givenUser = new User
         {
@@ -81,18 +81,22 @@ public class PiiStringTests
 
 public class TestDbContext : DbContext
 {
-    public TestDbContext() : this("server=localhost;database=PiiPlayground;UID=sa;PWD=sa123")
+    private readonly IPiiEncoder _piiEncoder;
+
+    public TestDbContext(IPiiEncoder piiEncoder) : this(
+        "Server=localhost;Port=5432;Database=playground;User ID=postgres;Password=sa123;")
     {
+        _piiEncoder = piiEncoder;
     }
 
     public TestDbContext(string connectionString)
-        : base(new DbContextOptionsBuilder().UseSqlServer(connectionString).Options)
+        : base(new DbContextOptionsBuilder().UseNpgsql(connectionString).Options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var piiConverter = new PiiStringConverter();
+        var piiConverter = new PiiStringConverter(_piiEncoder);
 
         modelBuilder.Entity<User>(opt =>
         {

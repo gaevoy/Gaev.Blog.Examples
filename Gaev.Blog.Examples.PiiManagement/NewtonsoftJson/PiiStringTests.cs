@@ -3,7 +3,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Gaev.Blog.Examples.PiiManagement.NewtonsoftJson;
+namespace Gaev.Blog.Examples.NewtonsoftJson;
 
 public class PiiStringTests
 {
@@ -16,7 +16,7 @@ public class PiiStringTests
             Name = "John Doe",
             Email = "john.doe@test.com"
         };
-        var settings = new JsonSerializerSettings { Converters = { new PiiStringConverter() } };
+        var settings = new JsonSerializerSettings {Converters = {new PiiStringConverter(new PiiAsPlainText())}};
 
         // When
         var json = JsonConvert.SerializeObject(user, settings);
@@ -31,13 +31,13 @@ public class PiiStringTests
     public void NewtonsoftJson_should_encrypt()
     {
         // Given
-        using var _ = new PiiScope(new PiiSerializers.Aes128WithRandomIv("hb50qBZSF0fcLSl9814PIqmO4gEZcJGB/Kd4fpTTBcU="));
         var user = new User
         {
             Name = "John Doe",
             Email = "john.doe@test.com"
         };
-        var settings = new JsonSerializerSettings { Converters = { new PiiStringConverter() } };
+        var key = "hb50qBZSF0fcLSl9814PIqmO4gEZcJGB/Kd4fpTTBcU=";
+        var settings = new JsonSerializerSettings {Converters = {new PiiStringConverter(new PiiAsAes128(key))}};
 
         // When
         var json = JsonConvert.SerializeObject(user, settings);
@@ -52,13 +52,12 @@ public class PiiStringTests
     public void NewtonsoftJson_should_hash()
     {
         // Given
-        using var _ = new PiiScope(new PiiSerializers.Sha256());
         var user = new User
         {
             Name = "John Doe",
             Email = "john.doe@test.com"
         };
-        var settings = new JsonSerializerSettings { Converters = { new PiiStringConverter() } };
+        var settings = new JsonSerializerSettings {Converters = {new PiiStringConverter(new PiiAsSha256())}};
 
         // When
         var json = JsonConvert.SerializeObject(user, settings);
