@@ -14,5 +14,6 @@ public class PiiAsSha256 : IPiiEncoder
         return Convert.ToBase64String(hashedBuffer);
     }
 
-    public PiiString ToPiiString(string str) => throw new NotSupportedException();
+    public PiiString ToPiiString(string str)
+        => throw new NotSupportedException();
 }
