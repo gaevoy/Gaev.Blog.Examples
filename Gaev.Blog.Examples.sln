@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.SecuredAppSetting
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.EnumParsePitfall", "Gaev.Blog.Examples.EnumParsePitfall\Gaev.Blog.Examples.EnumParsePitfall.csproj", "{82D0EB29-6FD0-4D87-80B0-9071C375EFD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.PiiManagement", "Gaev.Blog.Examples.PiiManagement\Gaev.Blog.Examples.PiiManagement.csproj", "{BEC66FC1-7D56-498F-BBCF-093B7A9A09CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.PiiTypes", "Gaev.Blog.Examples.PiiTypes\Gaev.Blog.Examples.PiiTypes.csproj", "{BEC66FC1-7D56-498F-BBCF-093B7A9A09CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
