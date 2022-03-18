@@ -103,7 +103,7 @@ public class TestDbContext : DbContext
             opt.ToTable("User");
             opt.Property(e => e.Name).HasConversion(piiConverter);
             opt.Property(e => e.Email).HasConversion(piiConverter);
-            opt.Property(e => e.IAmNull).HasConversion(piiConverter);
+            opt.Property(e => e.Location).HasConversion(piiConverter);
         });
     }
 
