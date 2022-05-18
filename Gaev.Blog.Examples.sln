@@ -66,8 +66,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Charlie.Api", "Archite
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Shell", "ArchitectureTestProjects\Gaev.Shell\Gaev.Shell.csproj", "{6258FE9C-5A8A-43E3-9AC8-CBF31003CD57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Blog.Examples.ArchitectureTests.NetFramework", "Gaev.Blog.Examples.ArchitectureTests.NetFramework\Gaev.Blog.Examples.ArchitectureTests.NetFramework.csproj", "{D2A4CC49-2CF7-456F-AA8C-C79D3E57223D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -202,10 +200,6 @@ Global
 		{6258FE9C-5A8A-43E3-9AC8-CBF31003CD57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6258FE9C-5A8A-43E3-9AC8-CBF31003CD57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6258FE9C-5A8A-43E3-9AC8-CBF31003CD57}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2A4CC49-2CF7-456F-AA8C-C79D3E57223D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2A4CC49-2CF7-456F-AA8C-C79D3E57223D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2A4CC49-2CF7-456F-AA8C-C79D3E57223D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2A4CC49-2CF7-456F-AA8C-C79D3E57223D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{22F08D1A-C8F6-418A-B57D-8CBA93AD39ED} = {6153E8EB-C48C-44C2-8B7B-6D94DFD338B6}

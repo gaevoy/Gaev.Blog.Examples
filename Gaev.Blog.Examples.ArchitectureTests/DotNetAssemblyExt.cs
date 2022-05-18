@@ -1,4 +1,5 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Linq;
+using System.Runtime.Versioning;
 
 namespace Gaev.Blog.Examples;
 

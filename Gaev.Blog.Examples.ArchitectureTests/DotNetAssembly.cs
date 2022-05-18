@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil;
@@ -65,7 +64,6 @@ public class DotNetAssembly
         }
         catch (AssemblyResolutionException)
         {
-            Console.WriteLine($"AssemblyResolutionException: {assembly.Name}");
             return null;
         }
     }
