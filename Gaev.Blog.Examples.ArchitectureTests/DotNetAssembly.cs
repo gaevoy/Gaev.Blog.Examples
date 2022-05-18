@@ -17,11 +17,14 @@ public class DotNetAssembly
     public string FullName
         => MonoCecilAssembly.Name?.FullName ?? "";
 
+    public string Name
+        => MonoCecilAssembly.Name?.Name ?? "";
+
     public override int GetHashCode()
         => FullName.GetHashCode();
 
     public override string ToString()
-        => FullName;
+        => Name;
 
     public override bool Equals(object obj)
         => obj is DotNetAssembly other && other.FullName.Equals(FullName);
