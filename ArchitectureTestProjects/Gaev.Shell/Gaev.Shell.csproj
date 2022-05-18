@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>10</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Gaev.Alfa\Gaev.Alfa.csproj" />
+      <ProjectReference Include="..\Gaev.Bravo\Gaev.Bravo.csproj" />
+      <ProjectReference Include="..\Gaev.Charlie\Gaev.Charlie.csproj" />
+    </ItemGroup>
+
+</Project>
