@@ -6,12 +6,12 @@ namespace Gaev.Blog.Examples;
 
 public class DotNetAssembly
 {
+    private DotNetAssembly(AssemblyDefinition assembly)
+        => MonoCecilAssembly = assembly;
+
     public AssemblyDefinition MonoCecilAssembly { get; }
     public HashSet<DotNetAssembly> Dependencies { get; } = new();
     public HashSet<DotNetAssembly> BackwardsDependencies { get; } = new();
-
-    private DotNetAssembly(AssemblyDefinition assembly)
-        => MonoCecilAssembly = assembly;
 
     public string FullName
         => MonoCecilAssembly.Name?.FullName ?? "";
