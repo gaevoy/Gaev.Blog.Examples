@@ -6,11 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Gaev.Alfa.Api\Gaev.Alfa.Api.csproj" />
       <ProjectReference Include="..\Gaev.Bravo.Api\Gaev.Bravo.Api.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.25" />
     </ItemGroup>
 
 </Project>

@@ -2,6 +2,6 @@
 
 namespace Gaev.Alfa;
 
-public class Domain : IApi
+public class Domain : IAlfaApi
 {
 }

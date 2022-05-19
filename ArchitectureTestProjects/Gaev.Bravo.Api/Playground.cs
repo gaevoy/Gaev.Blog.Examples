@@ -2,6 +2,6 @@
 
 public class Playground
 {
-    // public Gaev.Alfa.Api.IApi AlfaApi;
+    // public Gaev.Alfa.Api.IAlfaApi AlfaApi;
     // public Microsoft.Extensions.DependencyInjection.IServiceCollection Container;
 }

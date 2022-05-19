@@ -7,6 +7,6 @@ public class Bootstrap
 {
     public static void Boot(IServiceCollection container)
     {
-        container.AddScoped<IApi, Domain>();
+        container.AddScoped<ICharlieApi, Domain>();
     }
 }

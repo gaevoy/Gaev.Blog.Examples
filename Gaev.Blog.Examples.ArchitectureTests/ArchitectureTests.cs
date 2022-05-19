@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
+using PlantUml.Net;
 using static Gaev.Blog.Examples.Conventions;
 
 namespace Gaev.Blog.Examples;
@@ -11,47 +13,63 @@ public class ArchitectureTests
     static readonly List<DotNetAssembly> AllAssemblies
         = DotNetAssembly.LoadAll();
 
-    static IEnumerable<DotNetAssembly> MyAppProjects
+    public static IEnumerable<DotNetAssembly> AppProjects
         => AllAssemblies.Where(IsMyApp).Where(IsNotTest);
 
-    static IEnumerable<DotNetAssembly> Contracts
-        => MyAppProjects.Where(IsContract);
-
-    static IEnumerable<DotNetAssembly> Implementations
-        => MyAppProjects.Where(IsImplementation);
-
-    [TestCaseSource(nameof(MyAppProjects))]
-    public void Project_should_be_NetStandard(DotNetAssembly it)
+    [TestCaseSource(nameof(AppProjects))]
+    public void App_project_should_be_NetStandard(DotNetAssembly it)
         => it.IsDotNetStandard()
             .Should().BeTrue();
 
-    [TestCaseSource(nameof(Contracts))]
-    public void Contract_should_not_reference_contract(DotNetAssembly my)
-        => my.Dependencies.Where(IsContract)
-            .Should().BeEmpty();
+    [TestCaseSource(nameof(AppProjects))]
+    public void App_project_should_have_NetStandard_dependencies_only(DotNetAssembly my)
+        => my.Dependencies
+            .Should().OnlyContain(e => e.IsDotNetStandard());
+
+    public static IEnumerable<DotNetAssembly> Contracts
+        => AppProjects.Where(IsContract);
 
     [TestCaseSource(nameof(Contracts))]
-    public void Contract_should_not_have_other_dependencies(DotNetAssembly my)
-        => my.Dependencies.Where(IsNotSystem)
-            .Should().BeEmpty();
+    public void Contract_should_not_reference_contract(DotNetAssembly contract)
+        => contract.Dependencies
+            .Should().NotContain(e => IsContract(e));
 
     [TestCaseSource(nameof(Contracts))]
-    public void Contract_should_not_reference_implementation(DotNetAssembly my)
-        => my.Dependencies.Where(IsImplementation)
-            .Should().BeEmpty();
+    public void Contract_should_not_have_any_dependencies(DotNetAssembly contract)
+        => contract.Dependencies
+            .Should().OnlyContain(e => IsSystem(e));
+
+    [TestCaseSource(nameof(Contracts))]
+    public void Contract_should_not_reference_implementation(DotNetAssembly contract)
+        => contract.Dependencies
+            .Should().NotContain(e => IsImplementation(e));
+
+    public static IEnumerable<DotNetAssembly> Implementations
+        => AppProjects.Where(IsImplementation);
 
     [TestCaseSource(nameof(Implementations))]
-    public void Implementation_should_not_reference_implementation(DotNetAssembly my)
-        => my.Dependencies.Where(IsImplementation)
-            .Should().BeEmpty();
+    public void Implementation_should_not_reference_implementation(DotNetAssembly implementation)
+        => implementation.Dependencies
+            .Should().NotContain(e => IsImplementation(e));
 
     [TestCaseSource(nameof(Implementations))]
-    public void Implementation_should_reference_DI(DotNetAssembly my)
-        => my.Dependencies.Where(e => e.Name.StartsWith("Microsoft.Extensions.DependencyInjection"))
-            .Should().NotBeEmpty();
+    public void Implementation_should_reference_DI(DotNetAssembly implementation)
+        => implementation.Dependencies
+            .Should().Contain(e => e.Name.StartsWith("Microsoft.Extensions.DependencyInjection"));
 
-    void CompilerHint()
+    [TestCaseSource(nameof(AppProjects))]
+    public void It_should_render_PlantUml_diagram(DotNetAssembly project)
     {
+        var plantUmlCode = project.RenderPlantUmlDiagram(IsMyApp);
+        var svgDiagramUrl = new RendererFactory()
+            .CreateRenderer()
+            .RenderAsUri(plantUmlCode, OutputFormat.Svg);
+        Console.WriteLine($"{svgDiagramUrl}\n{plantUmlCode}");
+    }
+
+    private void CompilerHint()
+    {
+        // This should make compiler to include the following dependencies 
         _ = typeof(Shell.Bootstrap).Assembly;
     }
 }

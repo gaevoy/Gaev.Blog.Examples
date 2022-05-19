@@ -1,5 +1,5 @@
 ﻿namespace Gaev.Charlie.Api;
 
-public interface IApi
+public interface ICharlieApi
 {
 }
