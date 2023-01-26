@@ -14,4 +14,8 @@
       <ProjectReference Include="..\Gaev.Blog.SecuredAppSettingsJson\Gaev.Blog.SecuredAppSettingsJson.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="ProgramOption2.cs" />
+    </ItemGroup>
+
 </Project>
