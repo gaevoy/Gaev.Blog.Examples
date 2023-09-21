@@ -15,10 +15,10 @@ public class DeserializationTests
     {
         // Given
         var xml = """
-                  <ArrayOfDocument>
-                      <Document><Type>Invoice</Type><Id>1</Id></Document>
-                      <Document><Type>CreditNote</Type><Id>2</Id></Document>
-                  </ArrayOfDocument>
+                  <ArrayOfMoney>
+                      <Money><Currency>EUR</Currency><Amount>1</Amount></Money>
+                      <Money><Currency>USD</Currency><Amount>2</Amount></Money>
+                  </ArrayOfMoney>
                   """;
 
         // When
@@ -27,8 +27,8 @@ public class DeserializationTests
         // Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Document(DocumentType.Invoice, 1),
-            new Document(DocumentType.CreditNote, 2)
+            new Money(Currency.EUR, 1),
+            new Money(Currency.USD, 2)
         });
     }
 
@@ -37,11 +37,11 @@ public class DeserializationTests
     {
         // Given
         var xml = """
-                  <ArrayOfDocument>
-                      <Document><Type>Invoice</Type><Id>1</Id></Document>
-                      <Document><Type>CreditNote</Type><Id>2</Id></Document>
-                      <Document><Type>Order</Type><Id>3</Id></Document>
-                  </ArrayOfDocument>
+                  <ArrayOfMoney>
+                      <Money><Currency>EUR</Currency><Amount>1</Amount></Money>
+                      <Money><Currency>USD</Currency><Amount>2</Amount></Money>
+                      <Money><Currency>Bitcoin</Currency><Amount>3</Amount></Money>
+                  </ArrayOfMoney>
                   """;
 
         // When
@@ -50,8 +50,8 @@ public class DeserializationTests
         // Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Document(DocumentType.Invoice, 1),
-            new Document(DocumentType.CreditNote, 2)
+            new Money(Currency.EUR, 1),
+            new Money(Currency.USD, 2)
         });
     }
 
@@ -60,11 +60,11 @@ public class DeserializationTests
     {
         // Given
         var xml = """
-                  <ArrayOfDocument>
-                      <Document><Type>Invoice</Type><Id>1</Id></Document>
-                      <Document><Type>CreditNote</Type><Id>2</Id></Document>
-                      <Document><Type>3</Type><Id>3</Id></Document>
-                  </ArrayOfDocument>
+                  <ArrayOfMoney>
+                      <Money><Currency>EUR</Currency><Amount>1</Amount></Money>
+                      <Money><Currency>USD</Currency><Amount>2</Amount></Money>
+                      <Money><Currency>3</Currency><Amount>3</Amount></Money>
+                  </ArrayOfMoney>
                   """;
 
         // When
@@ -73,8 +73,8 @@ public class DeserializationTests
         // Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Document(DocumentType.Invoice, 1),
-            new Document(DocumentType.CreditNote, 2)
+            new Money(Currency.EUR, 1),
+            new Money(Currency.USD, 2)
         });
     }
 
@@ -83,92 +83,91 @@ public class DeserializationTests
     {
         // Given
         var xml = """
-                  <?xml version="1.0" encoding="utf-8"?>
-                  <ArrayOfDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-                      <Document><Type>Invoice</Type><Id>1</Id></Document>
-                      <Document><Type>CreditNote</Type><Id>2</Id></Document>
-                      <Document><Type>Order</Type><Id>3</Id></Document>
-                  </ArrayOfDocument>
+                  <ArrayOfMoney>
+                      <Money><Currency>EUR</Currency><Amount>1</Amount></Money>
+                      <Money><Currency>USD</Currency><Amount>2</Amount></Money>
+                      <Money><Currency>Bitcoin</Currency><Amount>3</Amount></Money>
+                  </ArrayOfMoney>
                   """;
 
         // When
-        var serializer = new XmlSerializer(typeof(DocumentFixed[]));
+        var serializer = new XmlSerializer(typeof(MoneyFixed[]));
         var xmlAsStream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
         var actual = serializer.Deserialize(xmlAsStream);
 
         // Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new DocumentFixed(DocumentType.Invoice, 1),
-            new DocumentFixed(DocumentType.CreditNote, 2),
-            new DocumentFixed(DocumentType.Undefined, 3),
+            new MoneyFixed(Currency.EUR, 1),
+            new MoneyFixed(Currency.USD, 2),
+            new MoneyFixed(Currency.Undefined, 3),
         });
     }
 
     [Test]
     public void PrintXml()
     {
-        var serializer = new XmlSerializer(typeof(Document[]));
+        var serializer = new XmlSerializer(typeof(Money[]));
         using var stringWriter = new StringWriter();
         using var xmlWriter = XmlWriter.Create(stringWriter);
         serializer.Serialize(xmlWriter, new[]
         {
-            new Document(DocumentType.Invoice, 1),
-            new Document(DocumentType.CreditNote, 2)
+            new Money(Currency.EUR, 1),
+            new Money(Currency.USD, 2)
         });
         Console.WriteLine(stringWriter.ToString());
     }
 
-    private static Document[] Deserialize(string xml)
+    private static Money[] Deserialize(string xml)
     {
-        var serializer = new XmlSerializer(typeof(Document[]));
+        var serializer = new XmlSerializer(typeof(Money[]));
         var xmlAsStream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
-        return (Document[])serializer.Deserialize(xmlAsStream);
+        return (Money[])serializer.Deserialize(xmlAsStream);
     }
 }
 
-public class Document
+public class Money
 {
-    public Document()
+    public Money()
     {
     }
 
-    public Document(DocumentType type, int id)
+    public Money(Currency currency, decimal amount)
     {
-        Type = type;
-        Id = id;
+        Currency = currency;
+        Amount = amount;
     }
 
-    public DocumentType Type { get; set; }
-    public int Id { get; set; }
+    public Currency Currency { get; set; }
+    public decimal Amount { get; set; }
 }
 
-[XmlType(TypeName = "Document")]
-public class DocumentFixed
+[XmlType(TypeName = "Money")]
+public class MoneyFixed
 {
-    public DocumentFixed()
+    public MoneyFixed()
     {
     }
 
-    public DocumentFixed(string type, int id)
+    public MoneyFixed(string currency, decimal amount)
     {
-        Type = type;
-        Id = id;
+        Currency = currency;
+        Amount = amount;
     }
 
-    public DocumentFixed(DocumentType type, int id)
+    public MoneyFixed(Currency currency, decimal amount)
     {
-        TypeAsEnum = type;
-        Id = id;
+        CurrencyAsEnum = currency;
+        Amount = amount;
     }
 
     [XmlIgnore] 
-    public DocumentType TypeAsEnum { get; set; }
-    public string Type
+    public Currency CurrencyAsEnum { get; set; }
+    public string Currency
     {
-        get => TypeAsEnum.ToString("G");
-        set => TypeAsEnum = Enum.TryParse<DocumentType>(value, out var result) ? result : default;
+        get => CurrencyAsEnum.ToString("G");
+        set => CurrencyAsEnum = Enum.TryParse<Currency>(value, out var result) ? result : default;
     }
 
-    public int Id { get; set; }
+    public decimal Amount { get; set; }
 }

@@ -13,8 +13,8 @@ public class DeserializationTests
         // Given
         var json = """
                    [
-                       {"Type": "Invoice", "Id": 1},
-                       {"Type": "CreditNote", "Id": 2}
+                       {"Currency": "EUR", "Amount": 1},
+                       {"Currency": "USD", "Amount": 2}
                    ]
                    """;
 
@@ -24,8 +24,8 @@ public class DeserializationTests
         //Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Document(DocumentType.Invoice, 1),
-            new Document(DocumentType.CreditNote, 2)
+            new Money(Currency.EUR, 1),
+            new Money(Currency.USD, 2)
         });
     }
 
@@ -35,9 +35,9 @@ public class DeserializationTests
         // Given
         var json = """
                    [
-                       {"Type": "Invoice", "Id": 1},
-                       {"Type": "CreditNote", "Id": 2},
-                       {"Type": "Order", "Id": 3}
+                       {"Currency": "EUR", "Amount": 1},
+                       {"Currency": "USD", "Amount": 2},
+                       {"Currency": "Bitcoin", "Amount": 3}
                    ]
                    """;
 
@@ -47,8 +47,8 @@ public class DeserializationTests
         //Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Document(DocumentType.Invoice, 1),
-            new Document(DocumentType.CreditNote, 2)
+            new Money(Currency.EUR, 1),
+            new Money(Currency.USD, 2)
         });
     }
 
@@ -58,9 +58,9 @@ public class DeserializationTests
         // Given
         var json = """
                    [
-                       {"Type": 1, "Id": 1},
-                       {"Type": 2, "Id": 2},
-                       {"Type": 3, "Id": 3}
+                       {"Currency": 1, "Amount": 1},
+                       {"Currency": 2, "Amount": 2},
+                       {"Currency": 3, "Amount": 3}
                    ]
                    """;
 
@@ -70,9 +70,9 @@ public class DeserializationTests
         //Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Document(DocumentType.Invoice, 1),
-            new Document(DocumentType.CreditNote, 2),
-            new Document((DocumentType)3, 3),
+            new Money(Currency.EUR, 1),
+            new Money(Currency.USD, 2),
+            new Money((Currency)3, 3),
         });
     }
 
@@ -82,14 +82,14 @@ public class DeserializationTests
         // Given
         var json = """
                    [
-                       {"Type": "Invoice", "Id": 1},
-                       {"Type": "CreditNote", "Id": 2},
-                       {"Type": "Order", "Id": 3}
+                       {"Currency": "EUR", "Amount": 1},
+                       {"Currency": "USD", "Amount": 2},
+                       {"Currency": "Bitcoin", "Amount": 3}
                    ]
                    """;
 
         // When
-        var actual = JsonSerializer.Deserialize<Document[]>(json, new JsonSerializerOptions
+        var actual = JsonSerializer.Deserialize<Money[]>(json, new JsonSerializerOptions
         {
             Converters = { new UnknownEnumConverter() }
         });
@@ -97,15 +97,15 @@ public class DeserializationTests
         //Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Document(DocumentType.Invoice, 1),
-            new Document(DocumentType.CreditNote, 2),
-            new Document(default, 3),
+            new Money(Currency.EUR, 1),
+            new Money(Currency.USD, 2),
+            new Money(default, 3),
         });
     }
 
-    private static Document[] Deserialize(string json)
+    private static Money[] Deserialize(string json)
     {
-        return JsonSerializer.Deserialize<Document[]>(json, new JsonSerializerOptions
+        return JsonSerializer.Deserialize<Money[]>(json, new JsonSerializerOptions
         {
             Converters = { new JsonStringEnumConverter() }
         });

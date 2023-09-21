@@ -1,10 +1,12 @@
-﻿namespace Gaev.Blog.EnumAsStringTrap;
+﻿// ReSharper disable InconsistentNaming
 
-public record Document(DocumentType Type, int Id);
+namespace Gaev.Blog.EnumAsStringTrap;
 
-public enum DocumentType
+public record Money(Currency Currency, decimal Amount);
+
+public enum Currency
 {
     Undefined = 0,
-    Invoice = 1,
-    CreditNote = 2
+    EUR = 1,
+    USD = 2
 }
