@@ -27,8 +27,8 @@ public class DeserializationTests
         // Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Money(Currency.EUR, 1),
-            new Money(Currency.USD, 2)
+            new Money { Currency = Currency.EUR, Amount = 1 },
+            new Money { Currency = Currency.USD, Amount = 2 }
         });
     }
 
@@ -50,8 +50,8 @@ public class DeserializationTests
         // Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Money(Currency.EUR, 1),
-            new Money(Currency.USD, 2)
+            new Money { Currency = Currency.EUR, Amount = 1 },
+            new Money { Currency = Currency.USD, Amount = 2 }
         });
     }
 
@@ -73,8 +73,8 @@ public class DeserializationTests
         // Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new Money(Currency.EUR, 1),
-            new Money(Currency.USD, 2)
+            new Money { Currency = Currency.EUR, Amount = 1 },
+            new Money { Currency = Currency.USD, Amount = 2 }
         });
     }
 
@@ -91,16 +91,16 @@ public class DeserializationTests
                   """;
 
         // When
-        var serializer = new XmlSerializer(typeof(MoneyFixed[]));
+        var serializer = new XmlSerializer(typeof(MoneyV2[]));
         var xmlAsStream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
         var actual = serializer.Deserialize(xmlAsStream);
 
         // Then
         actual.Should().BeEquivalentTo(new[]
         {
-            new MoneyFixed(Currency.EUR, 1),
-            new MoneyFixed(Currency.USD, 2),
-            new MoneyFixed(Currency.Undefined, 3),
+            new MoneyV2 { CurrencyAsEnum = Currency.EUR, Amount = 1 },
+            new MoneyV2 { CurrencyAsEnum = Currency.USD, Amount = 2 },
+            new MoneyV2 { CurrencyAsEnum = Currency.Undefined, Amount = 3 }
         });
     }
 
@@ -112,8 +112,8 @@ public class DeserializationTests
         using var xmlWriter = XmlWriter.Create(stringWriter);
         serializer.Serialize(xmlWriter, new[]
         {
-            new Money(Currency.EUR, 1),
-            new Money(Currency.USD, 2)
+            new Money { Currency = Currency.EUR, Amount = 1 },
+            new Money { Currency = Currency.USD, Amount = 2 }
         });
         Console.WriteLine(stringWriter.ToString());
     }
@@ -132,41 +132,26 @@ public class Money
     {
     }
 
-    public Money(Currency currency, decimal amount)
-    {
-        Currency = currency;
-        Amount = amount;
-    }
-
     public Currency Currency { get; set; }
     public decimal Amount { get; set; }
 }
 
 [XmlType(TypeName = "Money")]
-public class MoneyFixed
+public class MoneyV2
 {
-    public MoneyFixed()
+    public MoneyV2()
     {
-    }
-
-    public MoneyFixed(string currency, decimal amount)
-    {
-        Currency = currency;
-        Amount = amount;
-    }
-
-    public MoneyFixed(Currency currency, decimal amount)
-    {
-        CurrencyAsEnum = currency;
-        Amount = amount;
     }
 
     [XmlIgnore] 
     public Currency CurrencyAsEnum { get; set; }
+
     public string Currency
     {
         get => CurrencyAsEnum.ToString("G");
-        set => CurrencyAsEnum = Enum.TryParse<Currency>(value, out var result) ? result : default;
+        set => CurrencyAsEnum = Enum.TryParse<Currency>(value, out var result)
+            ? result
+            : default;
     }
 
     public decimal Amount { get; set; }

@@ -2,27 +2,30 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace Gaev.Blog.EnumAsStringTrap.SystemTextJson;
 
 public class UnknownEnumConverter : JsonConverterFactory
 {
     private readonly JsonStringEnumConverter _underlying;
 
-    public UnknownEnumConverter()
-        => _underlying = new JsonStringEnumConverter();
+    public UnknownEnumConverter() : this(namingPolicy: null, allowIntegerValues: true)
+    {
+    }
 
     public UnknownEnumConverter(JsonNamingPolicy namingPolicy = null, bool allowIntegerValues = true)
         => _underlying = new JsonStringEnumConverter(namingPolicy, allowIntegerValues);
 
-    public sealed override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+    public sealed override JsonConverter CreateConverter(Type enumType, JsonSerializerOptions options)
     {
-        var underlyingConverter = _underlying.CreateConverter(typeToConvert, options);
-        var converterType = typeof(UnknownEnumConverter<>).MakeGenericType(typeToConvert);
+        var underlyingConverter = _underlying.CreateConverter(enumType, options);
+        var converterType = typeof(UnknownEnumConverter<>).MakeGenericType(enumType);
         return (JsonConverter)Activator.CreateInstance(converterType, underlyingConverter);
     }
 
-    public sealed override bool CanConvert(Type typeToConvert)
-        => _underlying.CanConvert(typeToConvert);
+    public sealed override bool CanConvert(Type enumType)
+        => _underlying.CanConvert(enumType);
 }
 
 public class UnknownEnumConverter<T> : JsonConverter<T> where T : struct, Enum
