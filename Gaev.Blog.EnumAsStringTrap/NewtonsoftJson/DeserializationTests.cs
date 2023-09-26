@@ -69,7 +69,7 @@ public class DeserializationTests
         var actual = Deserialize(json);
 
         //Then
-        actual.Should().Contain(new[]
+        actual.Should().BeEquivalentTo(new[]
         {
             new Money(Currency.EUR, 1),
             new Money(Currency.USD, 2),
@@ -96,7 +96,7 @@ public class DeserializationTests
         });
 
         //Then
-        actual.Should().Contain(new[]
+        actual.Should().BeEquivalentTo(new[]
         {
             new Money(Currency.EUR, 1),
             new Money(Currency.USD, 2),

@@ -7,17 +7,17 @@ namespace Gaev.Blog.EnumAsStringTrap.NewtonsoftJson;
 public class UnknownEnumConverter : StringEnumConverter
 {
     // https://stackoverflow.com/a/51847437
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object ReadJson(JsonReader reader, Type enumType, object existingValue, JsonSerializer serializer)
     {
         try
         {
-            return base.ReadJson(reader, objectType, existingValue, serializer);
+            return base.ReadJson(reader, enumType, existingValue, serializer);
         }
-        catch (JsonSerializationException) when (objectType.IsEnum)
+        catch (JsonSerializationException) when (enumType.IsEnum)
         {
             // TODO: Modify logic here to return custom faulty value
             // This returns default value https://stackoverflow.com/a/353073
-            return Activator.CreateInstance(objectType);
+            return Activator.CreateInstance(enumType);
         }
     }
 }

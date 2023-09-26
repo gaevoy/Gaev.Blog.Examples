@@ -32,13 +32,13 @@ public class UnknownEnumConverter<T> : JsonConverter<T> where T : struct, Enum
     public UnknownEnumConverter(JsonConverter<T> underlying)
         => _underlying = underlying;
 
-    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override T Read(ref Utf8JsonReader reader, Type enumType, JsonSerializerOptions options)
     {
         try
         {
-            return _underlying.Read(ref reader, typeToConvert, options);
+            return _underlying.Read(ref reader, enumType, options);
         }
-        catch (JsonException) when (typeToConvert.IsEnum)
+        catch (JsonException) when (enumType.IsEnum)
         {
             // TODO: Modify logic here to return custom faulty value
             return default;
