@@ -9,7 +9,7 @@ namespace Gaev.Blog.EnumAsStringTrap.NewtonsoftJson;
 public class DeserializationTests
 {
     [Test]
-    public void Deserialize_known_enum_values()
+    public void It_should_deserialize_known_enum_values()
     {
         // Given
         var json = """
@@ -31,7 +31,7 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Deserialize_unknown_enum_value()
+    public void It_should_deserialize_unknown_enum_value()
     {
         // Given
         var json = """
@@ -54,7 +54,7 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Deserialize_unknown_enum_value_server_fix()
+    public void It_should_deserialize_unknown_enum_value_server_fix()
     {
         // Given
         var json = """
@@ -78,7 +78,7 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Deserialize_unknown_enum_value_client_fix()
+    public void It_should_deserialize_unknown_enum_value_client_fix()
     {
         // Given
         var json = """

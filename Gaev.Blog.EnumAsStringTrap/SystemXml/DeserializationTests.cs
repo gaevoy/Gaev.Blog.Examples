@@ -11,7 +11,7 @@ namespace Gaev.Blog.EnumAsStringTrap.SystemXml;
 public class DeserializationTests
 {
     [Test]
-    public void Deserialize_all_known_enum_values()
+    public void It_should_deserialize_all_known_enum_values()
     {
         // Given
         var xml = """
@@ -33,7 +33,7 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Deserialize_unknown_enum_value()
+    public void It_should_deserialize_unknown_enum_value()
     {
         // Given
         var xml = """
@@ -56,7 +56,7 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Deserialize_unknown_numeric_enum_value()
+    public void It_should_deserialize_unknown_numeric_enum_value()
     {
         // Given
         var xml = """
@@ -79,7 +79,7 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Deserialize_unknown_enum_value_client_fix()
+    public void It_should_deserialize_unknown_enum_value_client_fix()
     {
         // Given
         var xml = """
@@ -105,7 +105,7 @@ public class DeserializationTests
     }
 
     [Test]
-    public void PrintXml()
+    public void It_should_print_serialized_Xml()
     {
         var serializer = new XmlSerializer(typeof(Money[]));
         using var stringWriter = new StringWriter();
