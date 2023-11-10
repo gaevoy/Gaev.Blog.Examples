@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <LangVersion>10</LangVersion>
         <GenerateProgramFile>false</GenerateProgramFile>
+        <TargetFrameworks>net7.0;net48</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
