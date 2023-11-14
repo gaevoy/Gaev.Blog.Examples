@@ -6,24 +6,13 @@ public static class EnumFlagExtensions
 {
     public static TEnum SetFlag<TEnum>(this TEnum value, TEnum flag, bool state) where TEnum : Enum
     {
-        // non-boxing conversion based on https://stackoverflow.com/a/23391746
+        // non-boxing conversion
         var left = Caster<TEnum, UInt64>.Cast(value);
         var right = Caster<TEnum, UInt64>.Cast(flag);
         var result = state
             ? left | right
             : left & ~right;
-        return Caster<ulong, TEnum>.Cast(result);
-    }
-
-    public static TEnum SetFlagWithBoxing<TEnum>(this TEnum value, TEnum flag, bool state) where TEnum : Enum
-    {
-        // conversion with boxing
-        var left = Convert.ToUInt64(value);
-        var right = Convert.ToUInt64(flag);
-        var result = state
-            ? left | right
-            : left & ~right;
-        return (TEnum)Convert.ChangeType(result, Enum.GetUnderlyingType(typeof(TEnum)));
+        return Caster<UInt64, TEnum>.Cast(result);
     }
 
     public static TEnum RaiseFlag<TEnum>(this TEnum value, TEnum flag) where TEnum : Enum
@@ -32,7 +21,10 @@ public static class EnumFlagExtensions
     public static TEnum LowerFlag<TEnum>(this TEnum value, TEnum flag) where TEnum : Enum
         => value.SetFlag(flag, false);
 
-    public static class Caster<TSource, TTarget>
+    /// <summary>
+    /// C# non-boxing conversion of enum to numeric and back. Based on https://stackoverflow.com/a/23391746
+    /// </summary>
+    private static class Caster<TSource, TTarget>
     {
         public static readonly Func<TSource, TTarget> Cast = CreateConvertMethod();
 

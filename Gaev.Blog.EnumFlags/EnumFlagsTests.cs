@@ -10,28 +10,48 @@ public class EnumFlagsTests
     public void It_should_raise_enum_flag()
     {
         // Given
-        var preferences = Pet.Cat; // 0010
+        var preferences = Pet.Cat;
 
         // When
-        preferences = preferences | Pet.Dog; // 0010 | 0001 = 0011
+        preferences = preferences | Pet.Dog;
 
         // Then
-        preferences.HasFlag(Pet.Cat).Should().Be(true);
+        preferences.Should().Be(Pet.Cat | Pet.Dog);
         preferences.HasFlag(Pet.Dog).Should().Be(true);
+        preferences.HasFlag(Pet.Cat).Should().Be(true);
+        preferences.HasFlag(Pet.Bird).Should().Be(false);
+        preferences.HasFlag(Pet.Rabbit).Should().Be(false);
+
+        // Explanation
+        //    0010 - Cat
+        // OR
+        //    0001 - Dog
+        //    ----
+        //    0011 - Cat with Dog
     }
 
     [Test]
     public void It_should_lower_enum_flag()
     {
         // Given
-        var preferences = Pet.Cat | Pet.Bird; // 0110
+        var preferences = Pet.Cat | Pet.Bird;
 
         // When
-        preferences = preferences & ~Pet.Bird; // 0110 & 1011 = 0010
+        preferences = preferences & ~Pet.Bird;
 
         // Then
+        preferences.Should().Be(Pet.Cat);
+        preferences.HasFlag(Pet.Dog).Should().Be(false);
         preferences.HasFlag(Pet.Cat).Should().Be(true);
         preferences.HasFlag(Pet.Bird).Should().Be(false);
+        preferences.HasFlag(Pet.Rabbit).Should().Be(false);
+
+        // Explanation
+        //     0110 - Cat with Bird
+        // AND
+        //     1011 - NOT(Bird) which is NOT(0100)
+        //     ----
+        //     0010 - Cat
     }
 
     [Test]
@@ -44,8 +64,11 @@ public class EnumFlagsTests
         preferences = preferences.SetFlag(Pet.Dog, true);
 
         // Then
-        preferences.HasFlag(Pet.Cat).Should().Be(true);
+        preferences.Should().Be(Pet.Cat | Pet.Dog);
         preferences.HasFlag(Pet.Dog).Should().Be(true);
+        preferences.HasFlag(Pet.Cat).Should().Be(true);
+        preferences.HasFlag(Pet.Bird).Should().Be(false);
+        preferences.HasFlag(Pet.Rabbit).Should().Be(false);
     }
 
     [Test]
@@ -58,8 +81,11 @@ public class EnumFlagsTests
         preferences = preferences.SetFlag(Pet.Bird, false);
 
         // Then
+        preferences.Should().Be(Pet.Cat);
+        preferences.HasFlag(Pet.Dog).Should().Be(false);
         preferences.HasFlag(Pet.Cat).Should().Be(true);
         preferences.HasFlag(Pet.Bird).Should().Be(false);
+        preferences.HasFlag(Pet.Rabbit).Should().Be(false);
     }
 
     [Test]
@@ -72,8 +98,11 @@ public class EnumFlagsTests
         preferences = preferences.RaiseFlag(Pet.Dog);
 
         // Then
-        preferences.HasFlag(Pet.Cat).Should().Be(true);
+        preferences.Should().Be(Pet.Cat | Pet.Dog);
         preferences.HasFlag(Pet.Dog).Should().Be(true);
+        preferences.HasFlag(Pet.Cat).Should().Be(true);
+        preferences.HasFlag(Pet.Bird).Should().Be(false);
+        preferences.HasFlag(Pet.Rabbit).Should().Be(false);
     }
 
     [Test]
@@ -86,8 +115,11 @@ public class EnumFlagsTests
         preferences = preferences.LowerFlag(Pet.Bird);
 
         // Then
+        preferences.Should().Be(Pet.Cat);
+        preferences.HasFlag(Pet.Dog).Should().Be(false);
         preferences.HasFlag(Pet.Cat).Should().Be(true);
         preferences.HasFlag(Pet.Bird).Should().Be(false);
+        preferences.HasFlag(Pet.Rabbit).Should().Be(false);
     }
 }
 #endif
