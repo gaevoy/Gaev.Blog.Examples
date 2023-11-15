@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -120,6 +121,40 @@ public class EnumFlagsTests
         preferences.HasFlag(Pet.Cat).Should().Be(true);
         preferences.HasFlag(Pet.Bird).Should().Be(false);
         preferences.HasFlag(Pet.Rabbit).Should().Be(false);
+    }
+
+    [TestCase(Pet.Cat | Pet.Dog, Pet.Bird, true, Pet.Cat | Pet.Dog | Pet.Bird)]
+    [TestCase(Pet.Cat | Pet.Dog, Pet.Dog, true, Pet.Cat | Pet.Dog)]
+    [TestCase(Pet.Cat | Pet.Dog, Pet.Cat, false, Pet.Dog)]
+    [TestCase(Pet.Cat | Pet.Dog, Pet.Bird, false, Pet.Cat | Pet.Dog)]
+    public void It_should_set_flag_via_ugly_code(Pet initial, Pet flag, bool state, Pet expected)
+    {
+        // Given
+        var preferences = initial;
+
+        // When
+        // Based on: https://github.com/dotnet/runtime/issues/14084#issuecomment-803638941
+        var stateMask = (Pet)(-1 * Convert.ToInt32(state)); // same as `state ? -1 : 0`
+        preferences = (preferences & ~flag) | (stateMask & flag);
+
+        // Then
+        preferences.Should().Be(expected);
+        /* JavaScript version: https://jsfiddle.net/5h6j04a9/
+const dog =  0b0001;
+const cat =  0b0010;
+const bird = 0b0100;
+let myPets = cat | dog;
+
+// raise
+let state = true;
+let flag = bird;
+myPets = (myPets & ~flag) | (-state & flag);
+
+// lower
+state = false;
+flag = cat;
+myPets = (myPets & ~flag) | (-state & flag);
+        */
     }
 }
 #endif
