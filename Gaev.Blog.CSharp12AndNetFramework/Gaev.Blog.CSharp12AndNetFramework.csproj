@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net48</TargetFramework>
+        <LangVersion>12</LangVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Memory" Version="4.5.4"/>
+
+        <!-- PolySharp provides generated, source-only polyfills for C# language features required to enable latest C# in .NET Framework -->
+        <PackageReference Include="PolySharp" Version="1.14.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+    </ItemGroup>
+</Project>
