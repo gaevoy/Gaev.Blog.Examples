@@ -74,10 +74,8 @@ export function upcast(data: AnyGridView): GridViewV3 {
       // add a GridViewV4 without an upcastToV4 hop and `data` no longer narrows
       // to `never` here, so this line stops compiling — a TS error, not a
       // production surprise
-      const _exhaustive: never = data;
-      throw new Error(
-        `Unknown grid view schema version: ${(_exhaustive as AnyGridView & { schemaVer: number }).schemaVer}`,
-      );
+      data satisfies never;
+      throw new Error('Unknown grid view schema version');
     }
   }
 }

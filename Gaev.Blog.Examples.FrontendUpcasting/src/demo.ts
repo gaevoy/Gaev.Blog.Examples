@@ -6,11 +6,21 @@ import { createApiStorage, createGridViewStore } from './schema-zustand';
 // A store that's been around a while holds a mix of every version — a view
 // saved last year looks nothing like one saved this morning.
 const savedViews: Record<string, AnyGridView> = {
-  'orders:default': { schemaVer: 1, columns: ['id', 'total', 'createdAt'] },
-  'orders:finance': { schemaVer: 2, visibleColumns: ['id', 'total'], sort: 'total desc' },
+  'orders:default': {
+    schemaVer: 1,
+    columns: ['id', 'total', 'createdAt'],
+  },
+  'orders:finance': {
+    schemaVer: 2,
+    visibleColumns: ['id', 'total'],
+    sort: 'total desc',
+  },
   'orders:ops': {
     schemaVer: 3,
-    layout: { visibleColumns: ['id', 'status'], sort: 'id asc' },
+    layout: {
+      visibleColumns: ['id', 'status'],
+      sort: 'id asc',
+    },
     filters: 'status = open',
   },
 };
