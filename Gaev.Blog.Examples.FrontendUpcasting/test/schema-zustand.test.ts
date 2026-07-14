@@ -4,19 +4,15 @@ import { createApiStorage, createGridViewStore } from '../src/schema-zustand';
 // Older stored blobs carry only the envelope `version` — no inline schemaVer.
 // That's exactly why `migrate` stitches the version back on before upcasting.
 const V1_ENVELOPE = JSON.stringify({
-  state: { columns: ['id', 'total'], sort: 'total desc' },
+  state: { columns: ['id', 'total'] },
   version: 1,
 });
 const V2_ENVELOPE = JSON.stringify({
-  state: { columns: ['id'], sort: { field: 'id', direction: 'asc' } },
+  state: { visibleColumns: ['id'], sort: 'id asc' },
   version: 2,
 });
 const V3_ENVELOPE = JSON.stringify({
-  state: {
-    schemaVer: 3,
-    layout: { columns: [{ id: 'id', width: 80 }], sort: { field: 'id', direction: 'asc' } },
-    filters: [],
-  },
+  state: { schemaVer: 3, layout: { visibleColumns: ['id'], sort: 'id asc' }, filters: '' },
   version: 3,
 });
 
@@ -28,11 +24,9 @@ describe('zustand persist runs upcast() as its migrate', () => {
 
     const view = store.getState();
     expect(view.schemaVer).toBe(3);
-    expect(view.layout.sort).toEqual({ field: 'total', direction: 'desc' });
-    expect(view.layout.columns).toEqual([
-      { id: 'id', width: 120 },
-      { id: 'total', width: 120 },
-    ]);
+    expect(view.layout.visibleColumns).toEqual(['id', 'total']);
+    expect(view.layout.sort).toBe('');
+    expect(view.filters).toBe('');
   });
 
   it('migrates a stored V2 blob up to V3 on read', async () => {
@@ -46,7 +40,7 @@ describe('zustand persist runs upcast() as its migrate', () => {
     const storage = createApiStorage({ 'orders:ops': V3_ENVELOPE });
     const store = createGridViewStore('orders:ops', storage);
     await store.persist.rehydrate();
-    expect(store.getState().layout.columns).toEqual([{ id: 'id', width: 80 }]);
+    expect(store.getState().layout.visibleColumns).toEqual(['id']);
   });
 });
 
@@ -61,9 +55,8 @@ describe('saving makes the upgrade stick', () => {
     const written = JSON.parse(storage.dump()['orders:default']);
     expect(written.version).toBe(3);
     expect(written.state.schemaVer).toBe(3);
-    expect(written.state.filters).toEqual([]);
-    // the loose V1 sort string is gone — it's structured now
-    expect(written.state.layout.sort).toEqual({ field: 'total', direction: 'desc' });
+    expect(written.state.layout.visibleColumns).toEqual(['id', 'total']);
+    expect(written.state.filters).toBe('');
   });
 
   it('does not rewrite a blob that was already current', async () => {
@@ -78,10 +71,10 @@ describe('saving makes the upgrade stick', () => {
     const store = createGridViewStore('orders:new', storage);
     await store.persist.rehydrate();
 
-    store.setState({ filters: [{ field: 'status', op: 'eq', value: 'open' }] });
+    store.setState({ filters: 'status = open' });
 
     const written = JSON.parse(storage.dump()['orders:new']);
     expect(written.version).toBe(3);
-    expect(written.state.filters).toEqual([{ field: 'status', op: 'eq', value: 'open' }]);
+    expect(written.state.filters).toBe('status = open');
   });
 });

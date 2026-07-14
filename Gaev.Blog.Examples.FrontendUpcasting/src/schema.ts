@@ -6,53 +6,31 @@
 // ever reads it back. That single owner is exactly the condition upcasting-on-
 // read wants (see README for why this beats "user data" as an example).
 
-export type SortDirection = 'asc' | 'desc';
-
-export type SortSpec = {
-  field: string;
-  direction: SortDirection;
-};
-
-export type ColumnSpec = {
-  id: string;
-  width: number;
-};
-
-export type Filter = {
-  field: string;
-  op: 'eq' | 'contains' | 'gt' | 'lt';
-  value: string;
-};
-
 // ── V1: the first release ────────────────────────────────────────────────
-// Visible columns, in order, plus one sort column crammed into a loose string
-// like "createdAt desc".
+// Just the visible columns, in order.
 export type GridViewV1 = {
   schemaVer: 1;
   columns: string[];
+};
+
+// ── V2: renamed the field, added a saved sort ────────────────────────────
+// `columns` became `visibleColumns`, and a `sort` string joined it.
+export type GridViewV2 = {
+  schemaVer: 2;
+  visibleColumns: string[];
   sort: string;
 };
 
-// ── V2: sorting became structured ────────────────────────────────────────
-// Splitting "createdAt desc" by hand in every reader was fragile, so the field
-// and direction moved into their own shape. (A type change on `sort`.)
-export type GridViewV2 = {
-  schemaVer: 2;
-  columns: string[];
-  sort: SortSpec;
-};
-
-// ── V3: widths + filters, display grouped under `layout` ─────────────────
-// Columns grew from bare ids into {id, width}, saved filters arrived, and the
-// display bits were tucked under `layout`. (A restructure *and* a brand-new
-// field with no equivalent in older views.)
+// ── V3: display grouped under `layout`, filters added ────────────────────
+// `visibleColumns` + `sort` moved under `layout`, and a `filters` string
+// arrived with no equivalent in older views.
 export type GridViewV3 = {
   schemaVer: 3;
   layout: {
-    columns: ColumnSpec[];
-    sort: SortSpec;
+    visibleColumns: string[];
+    sort: string;
   };
-  filters: Filter[];
+  filters: string;
 };
 
 // The store holds a mix of all three at once — a healthy state, not a bug.
@@ -61,14 +39,11 @@ export type AnyGridView = GridViewV1 | GridViewV2 | GridViewV3;
 // ── One small step per version ───────────────────────────────────────────
 // Each takes exactly one version and returns the next. Small, pure, boring.
 
-export const DEFAULT_COLUMN_WIDTH = 120;
-
 export function upcastToV2(data: GridViewV1): GridViewV2 {
-  const [field = '', rawDirection] = data.sort.trim().split(/\s+/);
   return {
     schemaVer: 2,
-    columns: data.columns,
-    sort: { field, direction: rawDirection === 'desc' ? 'desc' : 'asc' },
+    visibleColumns: data.columns,
+    sort: '',
   };
 }
 
@@ -76,11 +51,11 @@ export function upcastToV3(data: GridViewV2): GridViewV3 {
   return {
     schemaVer: 3,
     layout: {
-      columns: data.columns.map((id) => ({ id, width: DEFAULT_COLUMN_WIDTH })),
+      visibleColumns: data.visibleColumns,
       sort: data.sort,
     },
     // New capability — nothing in older views maps to it, so it starts empty.
-    filters: [],
+    filters: '',
   };
 }
 
@@ -96,7 +71,13 @@ export function upcast(data: AnyGridView): GridViewV3 {
     case 3:
       return data;
     default: {
-      throw new Error(`Unknown grid view schema version: ${JSON.stringify(data)}`);
+      // add a GridViewV4 without an upcastToV4 hop and `data` no longer narrows
+      // to `never` here, so this line stops compiling — a TS error, not a
+      // production surprise
+      const _exhaustive: never = data;
+      throw new Error(
+        `Unknown grid view schema version: ${(_exhaustive as AnyGridView & { schemaVer: number }).schemaVer}`,
+      );
     }
   }
 }

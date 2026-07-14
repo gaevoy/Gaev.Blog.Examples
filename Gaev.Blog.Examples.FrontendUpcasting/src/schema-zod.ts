@@ -12,36 +12,24 @@
 import { z } from 'zod';
 import { upcast, type GridViewV3 } from './schema';
 
-const sortSpecSchema = z.object({
-  field: z.string(),
-  direction: z.enum(['asc', 'desc']),
-});
-
 export const gridViewV1Schema = z.object({
   schemaVer: z.literal(1),
   columns: z.array(z.string()),
-  sort: z.string(),
 });
 
 export const gridViewV2Schema = z.object({
   schemaVer: z.literal(2),
-  columns: z.array(z.string()),
-  sort: sortSpecSchema,
+  visibleColumns: z.array(z.string()),
+  sort: z.string(),
 });
 
 export const gridViewV3Schema = z.object({
   schemaVer: z.literal(3),
   layout: z.object({
-    columns: z.array(z.object({ id: z.string(), width: z.number() })),
-    sort: sortSpecSchema,
+    visibleColumns: z.array(z.string()),
+    sort: z.string(),
   }),
-  filters: z.array(
-    z.object({
-      field: z.string(),
-      op: z.enum(['eq', 'contains', 'gt', 'lt']),
-      value: z.string(),
-    }),
-  ),
+  filters: z.string(),
 });
 
 // A discriminated union keeps the versions honest — zod picks the right member

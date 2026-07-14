@@ -38,8 +38,8 @@ export function createApiStorage(seed: Record<string, string> = {}): ApiStorage 
 
 const freshView = (): GridViewV3 => ({
   schemaVer: 3,
-  layout: { columns: [], sort: { field: 'id', direction: 'asc' } },
-  filters: [],
+  layout: { visibleColumns: [], sort: '' },
+  filters: '',
 });
 
 export function createGridViewStore(name: string, storage: StateStorage) {
